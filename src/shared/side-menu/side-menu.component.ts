@@ -12,9 +12,10 @@ interface MenuItem {
 
 @Component({
   selector: 'app-side-menu',
+  standalone: true,
+  imports: [CommonModule, RouterModule],
   templateUrl: './side-menu.component.html',
   styleUrls: ['./side-menu.component.scss'],
-  imports: [CommonModule, RouterModule],
 })
 export class SideMenuComponent {
   collapsed = false;
