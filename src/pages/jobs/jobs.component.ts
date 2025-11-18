@@ -24,6 +24,20 @@ export interface Job {
   styleUrls: ['./jobs.component.scss'],
 })
 export class JobsComponent {
+  jobTypes = [
+    { value: 'all', label: 'Todos os tipos', icon: 'bi-grid' },
+    { value: 'Remoto', label: 'Remoto', icon: 'bi-house' },
+    { value: 'Híbrido', label: 'Híbrido', icon: 'bi-building' },
+    { value: 'Presencial', label: 'Presencial', icon: 'bi-geo-alt' },
+  ];
+
+  matchFilters = [
+    { value: 'all', label: 'Todos' },
+    { value: 'high', label: 'Alto (80%+)' },
+    { value: 'medium', label: 'Médio (60-79%)' },
+    { value: 'low', label: 'Baixo (<60%)' },
+  ];
+
   jobs: Job[] = [
     {
       id: 1,
@@ -34,7 +48,7 @@ export class JobsComponent {
       match: 92,
       type: 'Remoto',
       posted: '2 horas atrás',
-      logo: 'https://ui-avatars.com/api/?name=Tech+Solutions&background=0d6efd&color=fff',
+      logo: 'https://ui-avatars.com/api/?name=Tech+Solutions&background=FF6B35&color=fff',
       isFavorite: true,
       skills: ['Angular', 'TypeScript', 'RxJS', 'Bootstrap'],
     },
@@ -47,7 +61,7 @@ export class JobsComponent {
       match: 78,
       type: 'Híbrido',
       posted: '1 dia atrás',
-      logo: 'https://ui-avatars.com/api/?name=Startup+Inovadora&background=198754&color=fff',
+      logo: 'https://ui-avatars.com/api/?name=Startup+Inovadora&background=FF6B35&color=fff',
       isFavorite: false,
       skills: ['Java', 'Spring Boot', 'AWS', 'Docker'],
     },
@@ -60,7 +74,7 @@ export class JobsComponent {
       match: 85,
       type: 'Presencial',
       posted: '3 dias atrás',
-      logo: 'https://ui-avatars.com/api/?name=Empresa+Global&background=6f42c1&color=fff',
+      logo: 'https://ui-avatars.com/api/?name=Empresa+Global&background=FF6B35&color=fff',
       isFavorite: true,
       skills: ['React', 'Node.js', 'MongoDB', 'Express'],
     },
@@ -73,7 +87,7 @@ export class JobsComponent {
       match: 67,
       type: 'Remoto',
       posted: '5 dias atrás',
-      logo: 'https://ui-avatars.com/api/?name=App+Masters&background=fd7e14&color=fff',
+      logo: 'https://ui-avatars.com/api/?name=App+Masters&background=FF6B35&color=fff',
       isFavorite: false,
       skills: ['React Native', 'JavaScript', 'Redux', 'Firebase'],
     },
@@ -86,7 +100,7 @@ export class JobsComponent {
       match: 45,
       type: 'Híbrido',
       posted: '1 semana atrás',
-      logo: 'https://ui-avatars.com/api/?name=Cloud+Tech&background=dc3545&color=fff',
+      logo: 'https://ui-avatars.com/api/?name=Cloud+Tech&background=FF6B35&color=fff',
       isFavorite: false,
       skills: ['Kubernetes', 'Terraform', 'CI/CD', 'Linux'],
     },
@@ -95,6 +109,7 @@ export class JobsComponent {
   filteredJobs: Job[] = [...this.jobs];
   searchTerm: string = '';
   selectedType: string = 'all';
+  selectedMatch: string = 'all';
 
   toggleFavorite(job: Job) {
     job.isFavorite = !job.isFavorite;
@@ -112,13 +127,39 @@ export class JobsComponent {
       const matchesType =
         this.selectedType === 'all' || job.type === this.selectedType;
 
-      return matchesSearch && matchesType;
+      const matchesMatch =
+        this.selectedMatch === 'all' ||
+        (this.selectedMatch === 'high' && job.match >= 80) ||
+        (this.selectedMatch === 'medium' &&
+          job.match >= 60 &&
+          job.match < 80) ||
+        (this.selectedMatch === 'low' && job.match < 60);
+
+      return matchesSearch && matchesType && matchesMatch;
     });
   }
 
-  getMatchColor(match: number): string {
-    if (match >= 80) return 'success';
-    if (match >= 60) return 'warning';
-    return 'danger';
+  filterByMatch(matchLevel: string) {
+    this.selectedMatch = matchLevel;
+    this.filterJobs();
+  }
+
+  resetFilters() {
+    this.searchTerm = '';
+    this.selectedType = 'all';
+    this.selectedMatch = 'all';
+    this.filteredJobs = [...this.jobs];
+  }
+
+  getMatchLevel(match: number): string {
+    if (match >= 80) return 'high';
+    if (match >= 60) return 'medium';
+    return 'low';
+  }
+
+  getAverageMatch(): number {
+    if (this.filteredJobs.length === 0) return 0;
+    const total = this.filteredJobs.reduce((sum, job) => sum + job.match, 0);
+    return Math.round(total / this.filteredJobs.length);
   }
 }

@@ -1,157 +1,229 @@
-<div class="container-fluid mt-5 pt-4">
-  <div class="row">
-    <div class="col-12">
-      <!-- Header -->
-      <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-          <h1 class="h2 mb-1">Vagas Encontradas</h1>
-          <p class="text-muted mb-0">
-            {{ filteredJobs.length }} vagas correspondem aos seus critérios
+<div class="jobs-page">
+  <!-- Header com Search -->
+  <div class="jobs-hero">
+    <div class="container-fluid">
+      <div class="hero-content">
+        <div class="hero-text">
+          <h1 class="hero-title">
+            Encontre sua <span class="highlight">vaga ideal</span>
+          </h1>
+          <p class="hero-subtitle">
+            Tecnologia, cultura e match perfeito em um só lugar
           </p>
         </div>
-        <button class="btn btn-primary">
-          <i class="bi bi-funnel me-2"></i>Filtros Avançados
-        </button>
-      </div>
 
-      <!-- Search and Filters -->
-      <div class="row mb-4">
-        <div class="col-md-8">
-          <div class="input-group">
-            <span class="input-group-text bg-light border-end-0">
-              <i class="bi bi-search text-muted"></i>
-            </span>
+        <!-- Search Bar Grande -->
+        <div class="hero-search">
+          <div class="search-container">
+            <i class="bi bi-search search-icon"></i>
             <input
               type="text"
-              class="form-control border-start-0"
-              placeholder="Buscar por cargo, empresa ou tecnologia..."
+              class="search-input"
+              placeholder="Pesquisar por cargo, tecnologia ou empresa..."
               [(ngModel)]="searchTerm"
               (input)="filterJobs()"
             />
+            <button class="search-btn">
+              <i class="bi bi-arrow-right"></i>
+            </button>
           </div>
         </div>
-        <div class="col-md-4">
-          <select
-            class="form-select"
-            [(ngModel)]="selectedType"
-            (change)="filterJobs()"
-          >
-            <option value="all">Todos os tipos</option>
-            <option value="Remoto">Remoto</option>
-            <option value="Híbrido">Híbrido</option>
-            <option value="Presencial">Presencial</option>
-          </select>
-        </div>
       </div>
+    </div>
+  </div>
 
-      <!-- Jobs List -->
-      <div class="row">
-        <div class="col-12">
-          <div class="card border-0 shadow-sm">
-            <div class="card-body p-0">
-              <!-- Job Items -->
-              <div
-                *ngFor="let job of filteredJobs"
-                class="border-bottom p-4 job-item"
+  <!-- Main Content -->
+  <div class="jobs-main">
+    <div class="container-fluid">
+      <div class="jobs-layout">
+        <!-- Sidebar de Filtros -->
+        <aside class="filters-sidebar">
+          <div class="filters-header">
+            <h3>Filtros</h3>
+            <button class="clear-filters" (click)="resetFilters()">
+              Limpar
+            </button>
+          </div>
+
+          <!-- Filtro de Tipo -->
+          <div class="filter-group">
+            <h4 class="filter-title">Tipo de Vaga</h4>
+            <div class="filter-options">
+              <label class="filter-option" *ngFor="let type of jobTypes">
+                <input
+                  type="radio"
+                  name="jobType"
+                  [value]="type.value"
+                  [(ngModel)]="selectedType"
+                  (change)="filterJobs()"
+                />
+                <span class="checkmark"></span>
+                <span class="option-label">
+                  <i class="bi" [class]="type.icon"></i>
+                  {{ type.label }}
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Filtro de Match -->
+          <div class="filter-group">
+            <h4 class="filter-title">Nível de Match</h4>
+            <div class="match-filters">
+              <button
+                *ngFor="let match of matchFilters"
+                class="match-filter"
+                [class.active]="selectedMatch === match.value"
+                (click)="filterByMatch(match.value)"
               >
-                <div class="row align-items-center">
-                  <!-- Company Logo and Basic Info -->
-                  <div class="col-md-2 text-center">
-                    <img
-                      [src]="job.logo"
-                      [alt]="job.company"
-                      class="rounded-circle mb-2"
-                      width="60"
-                      height="60"
-                    />
-                    <div class="text-muted small">{{ job.posted }}</div>
+                <span class="match-dot" [class]="'dot-' + match.value"></span>
+                {{ match.label }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Stats -->
+          <div class="stats-card">
+            <div class="stat-item">
+              <div class="stat-number">{{ filteredJobs.length }}</div>
+              <div class="stat-label">Vagas encontradas</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">{{ getAverageMatch() }}%</div>
+              <div class="stat-label">Match médio</div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Grid de Vagas -->
+        <main class="jobs-grid-container">
+          <div class="jobs-grid-header">
+            <div class="results-info">
+              <h2>Vagas Disponíveis</h2>
+              <span class="results-count"
+                >{{ filteredJobs.length }} resultados</span
+              >
+            </div>
+            <div class="view-controls">
+              <button class="view-btn active">
+                <i class="bi bi-grid-3x3-gap"></i>
+              </button>
+              <button class="view-btn">
+                <i class="bi bi-list"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Grid de Cards -->
+          <div class="jobs-grid" *ngIf="filteredJobs.length > 0">
+            <div
+              *ngFor="let job of filteredJobs"
+              class="job-card"
+              [class.featured]="job.match > 85"
+            >
+              <!-- Header do Card -->
+              <div class="card-header">
+                <div class="company-brand">
+                  <img
+                    [src]="job.logo"
+                    [alt]="job.company"
+                    class="company-logo"
+                  />
+                  <div class="company-info">
+                    <h3 class="company-name">{{ job.company }}</h3>
+                    <span class="job-posted">{{ job.posted }}</span>
+                  </div>
+                </div>
+                <button
+                  class="favorite-btn"
+                  (click)="toggleFavorite(job)"
+                  [class.favorited]="job.isFavorite"
+                >
+                  <i
+                    class="bi"
+                    [class.bi-heart-fill]="job.isFavorite"
+                    [class.bi-heart]="!job.isFavorite"
+                  ></i>
+                </button>
+              </div>
+
+              <!-- Conteúdo do Card -->
+              <div class="card-content">
+                <h4 class="job-title">{{ job.title }}</h4>
+                <div class="job-location">
+                  <i class="bi bi-geo-alt"></i>
+                  {{ job.location }}
+                </div>
+
+                <!-- Skills Tags -->
+                <div class="skills-container">
+                  <span *ngFor="let skill of job.skills" class="skill-tag">
+                    {{ skill }}
+                  </span>
+                </div>
+
+                <!-- Info Footer -->
+                <div class="card-footer">
+                  <div class="job-meta">
+                    <span class="meta-tag type-tag">
+                      <i class="bi bi-briefcase"></i>
+                      {{ job.type }}
+                    </span>
+                    <span class="meta-tag salary-tag">
+                      <i class="bi bi-cash-coin"></i>
+                      {{ job.salary }}
+                    </span>
                   </div>
 
-                  <!-- Job Details -->
-                  <div class="col-md-6">
-                    <h5 class="mb-1">{{ job.title }}</h5>
-                    <p class="text-muted mb-2">
-                      <i class="bi bi-building me-1"></i>{{ job.company }} •
-                      <i class="bi bi-geo-alt me-1"></i>{{ job.location }}
-                    </p>
-
-                    <!-- Skills -->
-                    <div class="mb-2">
-                      <span
-                        *ngFor="let skill of job.skills"
-                        class="badge bg-light text-dark me-1 mb-1"
-                      >
-                        {{ skill }}
-                      </span>
+                  <!-- Match Indicator -->
+                  <div class="match-indicator">
+                    <div class="match-score" [class]="getMatchLevel(job.match)">
+                      {{ job.match }}%
                     </div>
-
-                    <!-- Meta Info -->
-                    <div class="d-flex align-items-center">
-                      <span class="badge bg-secondary me-2">
-                        <i class="bi bi-briefcase me-1"></i>{{ job.type }}
-                      </span>
-                      <span class="text-success fw-bold">
-                        <i class="bi bi-cash-coin me-1"></i>{{ job.salary }}
-                      </span>
-                    </div>
-                  </div>
-
-                  <!-- Match Score and Actions -->
-                  <div class="col-md-4">
-                    <div
-                      class="d-flex align-items-center justify-content-between"
-                    >
-                      <!-- Match Score -->
-                      <div class="text-center">
-                        <div
-                          class="fw-bold text-{{
-                            getMatchColor(job.match)
-                          }} mb-1"
-                        >
-                          {{ job.match }}%
-                        </div>
-                        <div class="progress" style="width: 80px; height: 6px">
-                          <div
-                            class="progress-bar bg-{{
-                              getMatchColor(job.match)
-                            }}"
-                            [style.width]="job.match + '%'"
-                          ></div>
-                        </div>
-                        <small class="text-muted">Match</small>
-                      </div>
-
-                      <!-- Actions -->
-                      <div class="d-flex gap-2">
-                        <button
-                          class="btn btn-outline-secondary btn-sm"
-                          (click)="toggleFavorite(job)"
-                          [class.text-warning]="job.isFavorite"
-                        >
-                          <i
-                            class="bi"
-                            [class.bi-star-fill]="job.isFavorite"
-                            [class.bi-star]="!job.isFavorite"
-                          ></i>
-                        </button>
-                        <button class="btn btn-primary btn-sm">
-                          <i class="bi bi-send me-1"></i>Candidatar
-                        </button>
-                      </div>
+                    <div class="match-bar">
+                      <div
+                        class="match-progress"
+                        [class]="getMatchLevel(job.match)"
+                        [style.width.%]="job.match"
+                      ></div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <!-- Empty State -->
-              <div *ngIf="filteredJobs.length === 0" class="text-center py-5">
-                <i class="bi bi-search display-1 text-muted"></i>
-                <h4 class="text-muted mt-3">Nenhuma vaga encontrada</h4>
-                <p class="text-muted">Tente ajustar seus filtros de busca</p>
+              <!-- Ações -->
+              <div class="card-actions">
+                <button class="action-btn secondary">
+                  <i class="bi bi-eye"></i>
+                  Detalhes
+                </button>
+                <button class="action-btn primary">
+                  <i class="bi bi-send"></i>
+                  Candidatar-se
+                </button>
+              </div>
+
+              <!-- Badge Featured -->
+              <div class="featured-badge" *ngIf="job.match > 85">
+                <i class="bi bi-lightning"></i>
+                Alto Match
               </div>
             </div>
           </div>
-        </div>
+
+          <!-- Empty State -->
+          <div *ngIf="filteredJobs.length === 0" class="empty-state">
+            <div class="empty-illustration">
+              <i class="bi bi-search"></i>
+            </div>
+            <h3>Nenhuma vaga encontrada</h3>
+            <p>Experimente ajustar seus filtros ou termos de busca</p>
+            <button class="reset-btn" (click)="resetFilters()">
+              <i class="bi bi-arrow-clockwise"></i>
+              Limpar Filtros
+            </button>
+          </div>
+        </main>
       </div>
     </div>
   </div>
