@@ -1,0 +1,195 @@
+<div class="applications-page">
+  <!-- Header -->
+  <div class="applications-header">
+    <div class="container-fluid">
+      <div class="header-content">
+        <div class="header-text">
+          <h1 class="page-title">
+            Minhas <span class="highlight">Candidaturas</span>
+          </h1>
+          <p class="page-subtitle">
+            Histórico de vagas que você se candidatou através do JobScout
+          </p>
+        </div>
+        <div class="header-stats">
+          <div class="stat-badge">
+            <span class="stat-number">{{ getTotalApplications() }}</span>
+            <span class="stat-label">Total</span>
+          </div>
+          <div class="stat-badge">
+            <span class="stat-number">{{ getThisWeekApplications() }}</span>
+            <span class="stat-label">Esta Semana</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="applications-main">
+    <div class="container-fluid">
+      <div class="applications-content">
+        <!-- Applications List -->
+        <div class="applications-list">
+          <!-- Application Item -->
+          <div
+            *ngFor="let application of applications"
+            class="application-item"
+          >
+            <div class="application-main">
+              <div class="application-info">
+                <h3 class="job-title">{{ application.jobTitle }}</h3>
+
+                <div class="company-details">
+                  <span class="company-name">
+                    <i class="bi bi-building me-1"></i>
+                    {{ application.company }}
+                  </span>
+                  <span class="application-source">
+                    <i class="bi bi-link-45deg me-1"></i>
+                    Via {{ application.source }}
+                  </span>
+                </div>
+
+                <div class="application-meta">
+                  <span class="meta-tag">
+                    <i class="bi bi-clock"></i>
+                    Candidatou em {{ application.appliedDate }}
+                  </span>
+                  <span class="meta-tag" *ngIf="application.match">
+                    <i class="bi bi-graph-up"></i>
+                    {{ application.match }}% de Match
+                  </span>
+                </div>
+              </div>
+
+              <div class="application-actions">
+                <button
+                  class="action-btn view-btn"
+                  (click)="viewJobDetails(application)"
+                >
+                  <i class="bi bi-eye"></i>
+                  Ver Vaga
+                </button>
+                <button
+                  class="action-btn apply-again-btn"
+                  (click)="applyAgain(application)"
+                >
+                  <i class="bi bi-send"></i>
+                  Candidatar Novamente
+                </button>
+              </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+              <button
+                class="quick-action-btn"
+                (click)="addToFavorites(application)"
+              >
+                <i class="bi bi-star"></i>
+                Favoritar
+              </button>
+              <button class="quick-action-btn" (click)="shareJob(application)">
+                <i class="bi bi-share"></i>
+                Compartilhar
+              </button>
+              <button
+                class="quick-action-btn"
+                (click)="removeApplication(application)"
+              >
+                <i class="bi bi-trash"></i>
+                Remover
+              </button>
+            </div>
+          </div>
+
+          <!-- Empty State -->
+          <div *ngIf="applications.length === 0" class="empty-state">
+            <div class="empty-illustration">
+              <i class="bi bi-send-check"></i>
+            </div>
+            <h3>Nenhuma candidatura ainda</h3>
+            <p>
+              Você ainda não se candidatou a nenhuma vaga através do JobScout
+            </p>
+            <button class="explore-jobs-btn" routerLink="/jobs">
+              <i class="bi bi-briefcase"></i>
+              Explorar Vagas
+            </button>
+          </div>
+        </div>
+
+        <!-- Sidebar - Stats -->
+        <aside class="applications-sidebar">
+          <!-- Statistics Card -->
+          <div class="sidebar-card">
+            <h3 class="sidebar-title">Estatísticas</h3>
+            <div class="stats-grid">
+              <div class="stat-item">
+                <div class="stat-icon">
+                  <i class="bi bi-send-check"></i>
+                </div>
+                <div class="stat-info">
+                  <div class="stat-number">{{ getTotalApplications() }}</div>
+                  <div class="stat-label">Total de Candidaturas</div>
+                </div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-icon">
+                  <i class="bi bi-calendar-week"></i>
+                </div>
+                <div class="stat-info">
+                  <div class="stat-number">{{ getThisWeekApplications() }}</div>
+                  <div class="stat-label">Esta Semana</div>
+                </div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-icon">
+                  <i class="bi bi-building"></i>
+                </div>
+                <div class="stat-info">
+                  <div class="stat-number">{{ getUniqueCompanies() }}</div>
+                  <div class="stat-label">Empresas Diferentes</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sources Card -->
+          <div class="sidebar-card">
+            <h3 class="sidebar-title">Fontes das Vagas</h3>
+            <div class="sources-list">
+              <div *ngFor="let source of getSources()" class="source-item">
+                <span class="source-name">{{ source.name }}</span>
+                <span class="source-count">{{ source.count }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="sidebar-card">
+            <h3 class="sidebar-title">Ações Rápidas</h3>
+            <div class="quick-actions-sidebar">
+              <button
+                class="quick-action-sidebar-btn"
+                (click)="exportApplications()"
+              >
+                <i class="bi bi-download"></i>
+                Exportar Histórico
+              </button>
+              <button class="quick-action-sidebar-btn" routerLink="/jobs">
+                <i class="bi bi-search"></i>
+                Buscar Mais Vagas
+              </button>
+              <button class="quick-action-sidebar-btn" (click)="clearHistory()">
+                <i class="bi bi-trash"></i>
+                Limpar Histórico
+              </button>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</div>
