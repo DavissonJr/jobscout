@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { SideMenuComponent } from '../../shared/side-menu/side-menu.component';
 import { CommonModule } from '@angular/common';
 
 interface Job {
@@ -11,13 +10,28 @@ interface Job {
   type: string;
 }
 
+interface Stat {
+  icon: string;
+  number: number;
+  label: string;
+  trend: number;
+}
+
 @Component({
   selector: 'app-home',
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  imports: [SideMenuComponent, CommonModule],
 })
 export class HomeComponent {
+  stats: Stat[] = [
+    { icon: 'bi-briefcase', number: 24, label: 'Vagas Encontradas', trend: 12 },
+    { icon: 'bi-send', number: 8, label: 'Candidaturas', trend: 5 },
+    { icon: 'bi-eye', number: 12, label: 'Visualizações', trend: -3 },
+    { icon: 'bi-star', number: 5, label: 'Favoritos', trend: 8 },
+  ];
+
   recentJobs: Job[] = [
     {
       title: 'Desenvolvedor Frontend Angular',
@@ -44,4 +58,10 @@ export class HomeComponent {
       type: 'Presencial',
     },
   ];
+
+  getMatchLevel(match: number): string {
+    if (match >= 80) return 'high';
+    if (match >= 60) return 'medium';
+    return 'low';
+  }
 }

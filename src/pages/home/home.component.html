@@ -1,86 +1,60 @@
-<div class="container-fluid mt-5 pt-4">
+<div class="home-container">
   <div class="row">
-    <!-- Side Menu Area -->
-    <div class="col-auto px-0">
-      <app-side-menu></app-side-menu>
-    </div>
-
     <!-- Main Content -->
-    <div class="col main-content">
+    <div class="col main-content custom-main-content">
       <!-- Welcome Section -->
       <div class="row mb-4">
         <div class="col-12">
-          <div class="p-4 bg-primary text-white rounded-3">
-            <h1 class="display-6 fw-bold">Olá, João! 👋</h1>
-            <p class="lead mb-0">
-              Seu match score médio é de <strong>78%</strong>. Continue assim!
-            </p>
+          <div class="welcome-card">
+            <div class="welcome-content">
+              <div class="welcome-text">
+                <h1 class="welcome-title">
+                  Olá, João! <span class="welcome-emoji">👋</span>
+                </h1>
+                <p class="welcome-subtitle">
+                  Seu <strong class="highlight-text">match score</strong> médio
+                  é de <strong class="match-score">78%</strong>. Continue assim!
+                </p>
+              </div>
+              <div class="welcome-actions">
+                <button class="btn quick-action-btn">
+                  <i class="bi bi-lightning me-2"></i>Buscar Vagas
+                </button>
+              </div>
+            </div>
+            <div class="welcome-graphic">
+              <div class="graphic-circle">
+                <i class="bi bi-trophy"></i>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
       <!-- Stats Cards -->
       <div class="row mb-4">
-        <div class="col-md-3 mb-3">
-          <div class="card border-0 shadow-sm h-100">
-            <div class="card-body">
-              <div class="d-flex align-items-center">
-                <div class="flex-shrink-0">
-                  <i class="bi bi-briefcase fs-1 text-primary"></i>
-                </div>
-                <div class="flex-grow-1 ms-3">
-                  <h4 class="card-title mb-1">24</h4>
-                  <p class="card-text text-muted mb-0">Vagas Encontradas</p>
-                </div>
+        <div class="col-xl-3 col-md-6 mb-3" *ngFor="let stat of stats">
+          <div class="stat-card">
+            <div class="stat-content">
+              <div class="stat-icon-wrapper">
+                <i class="bi" [class]="stat.icon"></i>
+              </div>
+              <div class="stat-info">
+                <h3 class="stat-number">{{ stat.number }}</h3>
+                <p class="stat-label">{{ stat.label }}</p>
               </div>
             </div>
-          </div>
-        </div>
-
-        <div class="col-md-3 mb-3">
-          <div class="card border-0 shadow-sm h-100">
-            <div class="card-body">
-              <div class="d-flex align-items-center">
-                <div class="flex-shrink-0">
-                  <i class="bi bi-send fs-1 text-success"></i>
-                </div>
-                <div class="flex-grow-1 ms-3">
-                  <h4 class="card-title mb-1">8</h4>
-                  <p class="card-text text-muted mb-0">Candidaturas</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-3 mb-3">
-          <div class="card border-0 shadow-sm h-100">
-            <div class="card-body">
-              <div class="d-flex align-items-center">
-                <div class="flex-shrink-0">
-                  <i class="bi bi-eye fs-1 text-info"></i>
-                </div>
-                <div class="flex-grow-1 ms-3">
-                  <h4 class="card-title mb-1">12</h4>
-                  <p class="card-text text-muted mb-0">Visualizações</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-3 mb-3">
-          <div class="card border-0 shadow-sm h-100">
-            <div class="card-body">
-              <div class="d-flex align-items-center">
-                <div class="flex-shrink-0">
-                  <i class="bi bi-star fs-1 text-warning"></i>
-                </div>
-                <div class="flex-grow-1 ms-3">
-                  <h4 class="card-title mb-1">5</h4>
-                  <p class="card-text text-muted mb-0">Favoritos</p>
-                </div>
-              </div>
+            <div
+              class="stat-trend"
+              [class]="stat.trend > 0 ? 'trend-up' : 'trend-down'"
+            >
+              <i
+                class="bi"
+                [class]="
+                  stat.trend > 0 ? 'bi-arrow-up-short' : 'bi-arrow-down-short'
+                "
+              ></i>
+              {{ stat.trend > 0 ? "+" : "" }}{{ stat.trend }}%
             </div>
           </div>
         </div>
@@ -90,62 +64,72 @@
       <div class="row">
         <!-- Recent Jobs -->
         <div class="col-lg-8 mb-4">
-          <div class="card border-0 shadow-sm">
-            <div class="card-header bg-white border-0">
-              <h5 class="card-title mb-0">Vagas Recentes</h5>
+          <div class="content-card">
+            <div class="card-header custom-card-header">
+              <div class="header-content">
+                <h3 class="card-title">Vagas Recentes</h3>
+                <span class="card-badge">3 novas</span>
+              </div>
+              <button class="btn header-action">
+                <i class="bi bi-arrow-clockwise"></i>
+              </button>
             </div>
             <div class="card-body">
-              <div class="list-group list-group-flush">
-                <div
-                  *ngFor="let job of recentJobs"
-                  class="list-group-item px-0"
-                >
-                  <div
-                    class="d-flex align-items-center justify-content-between"
-                  >
-                    <div>
-                      <h6 class="mb-1">{{ job.title }}</h6>
-                      <p class="text-muted mb-1 small">
+              <div class="jobs-list">
+                <div *ngFor="let job of recentJobs" class="job-item">
+                  <div class="job-main">
+                    <div class="job-avatar">
+                      <img
+                        [src]="
+                          'https://ui-avatars.com/api/?name=' +
+                          job.company +
+                          '&background=FF6B35&color=fff'
+                        "
+                        [alt]="job.company"
+                        class="avatar-img"
+                      />
+                    </div>
+                    <div class="job-details">
+                      <h4 class="job-title">{{ job.title }}</h4>
+                      <p class="job-company">
                         {{ job.company }} • {{ job.location }}
                       </p>
-                      <div class="d-flex align-items-center">
-                        <span class="badge bg-light text-dark me-2">{{
-                          job.salary
-                        }}</span>
-                        <span class="badge bg-success me-2"
-                          >{{ job.match }}% Match</span
+                      <div class="job-tags">
+                        <span class="job-tag salary-tag">
+                          <i class="bi bi-cash-coin"></i>
+                          {{ job.salary }}
+                        </span>
+                        <span
+                          class="job-tag match-tag"
+                          [class]="'match-' + getMatchLevel(job.match)"
                         >
-                        <span class="badge bg-secondary">{{ job.type }}</span>
+                          <i class="bi bi-graph-up"></i>
+                          {{ job.match }}% Match
+                        </span>
+                        <span class="job-tag type-tag">
+                          <i class="bi bi-geo-alt"></i>
+                          {{ job.type }}
+                        </span>
                       </div>
                     </div>
-                    <div class="dropdown">
-                      <button
-                        class="btn btn-outline-secondary btn-sm"
-                        data-bs-toggle="dropdown"
-                      >
-                        <i class="bi bi-three-dots"></i>
-                      </button>
-                      <ul class="dropdown-menu">
-                        <li>
-                          <a class="dropdown-item" href="#"
-                            ><i class="bi bi-star me-2"></i>Favoritar</a
-                          >
-                        </li>
-                        <li>
-                          <a class="dropdown-item" href="#"
-                            ><i class="bi bi-send me-2"></i>Candidatar</a
-                          >
-                        </li>
-                        <li><hr class="dropdown-divider" /></li>
-                        <li>
-                          <a class="dropdown-item" href="#"
-                            ><i class="bi bi-eye me-2"></i>Ver detalhes</a
-                          >
-                        </li>
-                      </ul>
-                    </div>
+                  </div>
+                  <div class="job-actions">
+                    <button class="btn action-btn favorite-btn">
+                      <i class="bi bi-star"></i>
+                    </button>
+                    <button class="btn action-btn apply-btn">
+                      <i class="bi bi-send"></i>
+                      Candidatar
+                    </button>
                   </div>
                 </div>
+              </div>
+
+              <div class="view-all-section">
+                <a href="#" class="view-all-link">
+                  Ver todas as vagas
+                  <i class="bi bi-arrow-right"></i>
+                </a>
               </div>
             </div>
           </div>
@@ -153,23 +137,54 @@
 
         <!-- Quick Actions -->
         <div class="col-lg-4 mb-4">
-          <div class="card border-0 shadow-sm">
-            <div class="card-header bg-white border-0">
-              <h5 class="card-title mb-0">Ações Rápidas</h5>
+          <div class="content-card">
+            <div class="card-header custom-card-header">
+              <h3 class="card-title">Ações Rápidas</h3>
             </div>
             <div class="card-body">
-              <div class="d-grid gap-2">
-                <button class="btn btn-primary btn-lg">
-                  <i class="bi bi-robot me-2"></i>Ativar Rastreador
+              <div class="quick-actions-grid">
+                <button class="quick-action-card primary-action">
+                  <div class="action-icon">
+                    <i class="bi bi-robot"></i>
+                  </div>
+                  <div class="action-content">
+                    <h4>Ativar Rastreador</h4>
+                    <p>Encontre vagas automaticamente</p>
+                  </div>
+                  <i class="bi bi-arrow-right action-arrow"></i>
                 </button>
-                <button class="btn btn-outline-primary">
-                  <i class="bi bi-upload me-2"></i>Upload do CV
+
+                <button class="quick-action-card">
+                  <div class="action-icon">
+                    <i class="bi bi-upload"></i>
+                  </div>
+                  <div class="action-content">
+                    <h4>Upload do CV</h4>
+                    <p>Atualize seu currículo</p>
+                  </div>
+                  <i class="bi bi-arrow-right action-arrow"></i>
                 </button>
-                <button class="btn btn-outline-success">
-                  <i class="bi bi-graph-up me-2"></i>Ver Analytics
+
+                <button class="quick-action-card">
+                  <div class="action-icon">
+                    <i class="bi bi-graph-up"></i>
+                  </div>
+                  <div class="action-content">
+                    <h4>Ver Analytics</h4>
+                    <p>Analise seu desempenho</p>
+                  </div>
+                  <i class="bi bi-arrow-right action-arrow"></i>
                 </button>
-                <button class="btn btn-outline-info">
-                  <i class="bi bi-bell me-2"></i>Configurar Alertas
+
+                <button class="quick-action-card">
+                  <div class="action-icon">
+                    <i class="bi bi-bell"></i>
+                  </div>
+                  <div class="action-content">
+                    <h4>Configurar Alertas</h4>
+                    <p>Notificações personalizadas</p>
+                  </div>
+                  <i class="bi bi-arrow-right action-arrow"></i>
                 </button>
               </div>
             </div>
