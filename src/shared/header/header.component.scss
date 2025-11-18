@@ -3,8 +3,8 @@ $primary-orange: #FF6B35;
 $dark-gray: #2D2D2D;
 $smoke-white: #F8F9FA;
 $medium-gray: #6C757D;
-$light-orange: lighten($primary-orange, 10%);
-$dark-orange: darken($primary-orange, 10%);
+$light-orange: #FF8C5A;
+$dark-orange: #E55A20;
 
 // Navbar principal
 .custom-navbar {
@@ -14,49 +14,114 @@ $dark-orange: darken($primary-orange, 10%);
   padding: 0.75rem 1rem;
   height: 70px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1100;
 }
 
-// Logo e Brand
+// Logo Nova e Melhorada
 .navbar-brand {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: $smoke-white !important;
   text-decoration: none;
 
-  .logo-icon {
-    background: linear-gradient(135deg, $primary-orange, $light-orange);
-    border-radius: 10px;
-    padding: 8px;
+  .logo-container {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .logo-main {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
 
-    i {
-      color: white;
-      font-size: 1.2rem;
+    .logo-icon {
+      font-size: 1.8rem;
+      background: linear-gradient(135deg, $primary-orange, $light-orange);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 2px 4px rgba($primary-orange, 0.3));
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 20px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, $primary-orange, transparent);
+      border-radius: 2px;
     }
   }
 
-  .brand-text {
-    background: linear-gradient(135deg, $primary-orange, $light-orange);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+  .logo-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+
+    .brand-primary {
+      font-size: 1.4rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, $primary-orange, $light-orange);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.5px;
+    }
+
+    .brand-secondary {
+      font-size: 1.1rem;
+      font-weight: 300;
+      color: $smoke-white;
+      letter-spacing: 1px;
+      margin-top: -2px;
+    }
   }
 }
 
-// Menu Toggle
-.menu-toggle {
-  color: $smoke-white;
-  border: 1px solid lighten($dark-gray, 15%);
-  border-radius: 8px;
-  padding: 8px 12px;
+// Botão Upgrade
+.upgrade-btn {
+  background: linear-gradient(135deg, $primary-orange, $light-orange);
+  border: none;
+  border-radius: 10px;
+  padding: 0.5rem 1rem;
+  color: white;
+  font-weight: 600;
   transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s ease;
+  }
 
   &:hover {
-    background: $primary-orange;
-    border-color: $primary-orange;
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba($primary-orange, 0.4);
+
+    &::before {
+      left: 100%;
+    }
+
+    .upgrade-text {
+      letter-spacing: 0.5px;
+    }
+  }
+
+  .upgrade-text {
+    transition: letter-spacing 0.3s ease;
   }
 }
 
@@ -71,6 +136,12 @@ $dark-orange: darken($primary-orange, 10%);
   overflow: hidden;
   background: lighten($dark-gray, 5%);
   border: 1px solid lighten($dark-gray, 10%);
+  transition: all 0.3s ease;
+
+  &:focus-within {
+    border-color: $primary-orange;
+    box-shadow: 0 0 0 3px rgba($primary-orange, 0.1);
+  }
 
   .search-icon {
     background: transparent;
@@ -84,6 +155,7 @@ $dark-orange: darken($primary-orange, 10%);
     border: none;
     color: $smoke-white;
     padding: 0.75rem 0;
+    font-size: 0.95rem;
 
     &::placeholder {
       color: $medium-gray;
@@ -151,6 +223,7 @@ $dark-orange: darken($primary-orange, 10%);
       align-items: center;
       justify-content: center;
       border: 2px solid $dark-gray;
+      font-weight: 600;
     }
   }
 
@@ -160,22 +233,26 @@ $dark-orange: darken($primary-orange, 10%);
     border-radius: 12px;
     padding: 0;
     min-width: 320px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 
     .notification-header {
       padding: 1rem;
       border-bottom: 1px solid lighten($dark-gray, 10%);
       display: flex;
-      justify-content: between;
+      justify-content: space-between;
       align-items: center;
 
       h6 {
         color: $smoke-white;
         margin: 0;
+        font-weight: 600;
       }
 
       .badge {
         background: $primary-orange;
         color: white;
+        font-size: 0.7rem;
+        padding: 0.25rem 0.5rem;
       }
     }
 
@@ -190,6 +267,7 @@ $dark-orange: darken($primary-orange, 10%);
       padding: 1rem;
       border-bottom: 1px solid lighten($dark-gray, 8%);
       transition: background 0.3s ease;
+      cursor: pointer;
 
       &.unread {
         background: rgba($primary-orange, 0.05);
@@ -205,6 +283,7 @@ $dark-orange: darken($primary-orange, 10%);
         border-radius: 8px;
         padding: 8px;
         margin-right: 12px;
+        flex-shrink: 0;
 
         i {
           font-size: 1rem;
@@ -217,17 +296,20 @@ $dark-orange: darken($primary-orange, 10%);
         p {
           color: $smoke-white;
           margin: 0;
+          font-weight: 500;
         }
 
         small {
           color: $medium-gray;
+          display: block;
+          margin-top: 0.25rem;
         }
 
         .notification-time {
           display: block;
           font-size: 0.75rem;
           color: $medium-gray;
-          margin-top: 4px;
+          margin-top: 0.5rem;
         }
       }
     }
@@ -241,6 +323,7 @@ $dark-orange: darken($primary-orange, 10%);
         color: $primary-orange;
         text-decoration: none;
         font-weight: 500;
+        transition: color 0.3s ease;
 
         &:hover {
           color: $light-orange;
@@ -261,6 +344,7 @@ $dark-orange: darken($primary-orange, 10%);
     align-items: center;
     gap: 8px;
     transition: all 0.3s ease;
+    cursor: pointer;
 
     &:hover {
       border-color: $primary-orange;
@@ -322,6 +406,7 @@ $dark-orange: darken($primary-orange, 10%);
     border: 1px solid lighten($dark-gray, 10%);
     border-radius: 12px;
     padding: 0.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 
     .dropdown-item {
       color: $smoke-white;
@@ -331,10 +416,12 @@ $dark-orange: darken($primary-orange, 10%);
       align-items: center;
       gap: 8px;
       transition: all 0.3s ease;
+      cursor: pointer;
 
       i {
         color: $medium-gray;
         width: 16px;
+        transition: color 0.3s ease;
       }
 
       &:hover {
@@ -399,7 +486,17 @@ $dark-orange: darken($primary-orange, 10%);
     padding: 0.5rem 1rem;
   }
 
-  .navbar-brand .brand-text {
-    font-size: 1.3rem;
+  .upgrade-btn .upgrade-text {
+    display: none;
+  }
+
+  .logo-text {
+    .brand-primary {
+      font-size: 1.2rem !important;
+    }
+
+    .brand-secondary {
+      font-size: 1rem !important;
+    }
   }
 }

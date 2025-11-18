@@ -1,16 +1,17 @@
 <nav class="navbar navbar-expand-lg navbar-dark fixed-top custom-navbar">
   <div class="container-fluid">
-    <!-- Left Side - Logo & Menu Toggle -->
+    <!-- Left Side - Logo -->
     <div class="d-flex align-items-center">
-      <button class="btn menu-toggle me-3" (click)="toggleMenu()">
-        <i class="bi bi-list"></i>
-      </button>
-
       <a class="navbar-brand d-flex align-items-center" href="#">
-        <div class="logo-icon me-2">
-          <i class="bi bi-binoculars"></i>
+        <div class="logo-container">
+          <div class="logo-main">
+            <i class="bi bi-binoculars-fill logo-icon"></i>
+          </div>
+          <div class="logo-text">
+            <span class="brand-primary">Job</span>
+            <span class="brand-secondary">Scout</span>
+          </div>
         </div>
-        <span class="brand-text">JobScout</span>
       </a>
     </div>
 
@@ -33,6 +34,12 @@
 
     <!-- Right Side - Actions -->
     <div class="d-flex align-items-center">
+      <!-- Upgrade Button -->
+      <button class="btn upgrade-btn me-3">
+        <i class="bi bi-rocket-takeoff me-2"></i>
+        <span class="upgrade-text">Upgrade</span>
+      </button>
+
       <!-- Quick Actions -->
       <div class="d-none d-md-flex align-items-center me-3">
         <button class="btn quick-action me-2" title="Rastreador">
@@ -141,12 +148,6 @@
             <a class="dropdown-item" href="#">
               <i class="bi bi-gear"></i>
               Configurações
-            </a>
-          </li>
-          <li>
-            <a class="dropdown-item" href="#">
-              <i class="bi bi-moon"></i>
-              Tema Escuro
             </a>
           </li>
           <li><hr class="dropdown-divider" /></li>

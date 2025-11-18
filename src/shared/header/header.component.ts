@@ -5,9 +5,4 @@ import { Component } from '@angular/core';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent {
-  toggleMenu() {
-    const event = new CustomEvent('toggleMenu');
-    window.dispatchEvent(event);
-  }
-}
+export class HeaderComponent {}
