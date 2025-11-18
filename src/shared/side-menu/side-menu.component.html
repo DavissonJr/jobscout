@@ -1,0 +1,70 @@
+<div
+  class="side-menu bg-light border-end vh-100 position-fixed"
+  [class.collapsed]="collapsed"
+>
+  <div class="p-3">
+    <!-- Principal -->
+    <div class="mb-4">
+      <small class="text-uppercase text-muted fw-bold mb-2">Principal</small>
+      <div class="list-group list-group-flush">
+        <a
+          *ngFor="let item of mainMenu"
+          [routerLink]="item.route"
+          class="list-group-item list-group-item-action border-0 rounded mb-1"
+          [class.active]="item.active"
+        >
+          <i class="bi {{ item.icon }} me-3"></i>
+          {{ item.label }}
+          <span
+            *ngIf="item.badge"
+            class="badge bg-primary rounded-pill float-end"
+          >
+            {{ item.badge }}
+          </span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Ferramentas -->
+    <div class="mb-4">
+      <small class="text-uppercase text-muted fw-bold mb-2">Ferramentas</small>
+      <div class="list-group list-group-flush">
+        <a
+          *ngFor="let item of toolsMenu"
+          [routerLink]="item.route"
+          class="list-group-item list-group-item-action border-0 rounded mb-1"
+        >
+          <i class="bi {{ item.icon }} me-3"></i>
+          {{ item.label }}
+        </a>
+      </div>
+    </div>
+
+    <!-- Analytics -->
+    <div class="mb-4">
+      <small class="text-uppercase text-muted fw-bold mb-2">Analytics</small>
+      <div class="list-group list-group-flush">
+        <a
+          *ngFor="let item of analyticsMenu"
+          [routerLink]="item.route"
+          class="list-group-item list-group-item-action border-0 rounded mb-1"
+        >
+          <i class="bi {{ item.icon }} me-3"></i>
+          {{ item.label }}
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Collapse Button -->
+  <div class="position-absolute bottom-0 start-0 w-100 p-3 border-top">
+    <button class="btn btn-outline-secondary w-100" (click)="toggleCollapse()">
+      <i
+        class="bi"
+        [class.bi-chevron-left]="!collapsed"
+        [class.bi-chevron-right]="collapsed"
+      ></i>
+      {{ collapsed ? "Expandir" : "Recolher" }}
+    </button>
+  </div>
+</div>

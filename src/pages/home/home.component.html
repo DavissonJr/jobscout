@@ -1,0 +1,181 @@
+<div class="container-fluid mt-5 pt-4">
+  <div class="row">
+    <!-- Side Menu Area -->
+    <div class="col-auto px-0">
+      <app-side-menu></app-side-menu>
+    </div>
+
+    <!-- Main Content -->
+    <div class="col main-content">
+      <!-- Welcome Section -->
+      <div class="row mb-4">
+        <div class="col-12">
+          <div class="p-4 bg-primary text-white rounded-3">
+            <h1 class="display-6 fw-bold">Olá, João! 👋</h1>
+            <p class="lead mb-0">
+              Seu match score médio é de <strong>78%</strong>. Continue assim!
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+          <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <div class="flex-shrink-0">
+                  <i class="bi bi-briefcase fs-1 text-primary"></i>
+                </div>
+                <div class="flex-grow-1 ms-3">
+                  <h4 class="card-title mb-1">24</h4>
+                  <p class="card-text text-muted mb-0">Vagas Encontradas</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+          <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <div class="flex-shrink-0">
+                  <i class="bi bi-send fs-1 text-success"></i>
+                </div>
+                <div class="flex-grow-1 ms-3">
+                  <h4 class="card-title mb-1">8</h4>
+                  <p class="card-text text-muted mb-0">Candidaturas</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+          <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <div class="flex-shrink-0">
+                  <i class="bi bi-eye fs-1 text-info"></i>
+                </div>
+                <div class="flex-grow-1 ms-3">
+                  <h4 class="card-title mb-1">12</h4>
+                  <p class="card-text text-muted mb-0">Visualizações</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+          <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <div class="flex-shrink-0">
+                  <i class="bi bi-star fs-1 text-warning"></i>
+                </div>
+                <div class="flex-grow-1 ms-3">
+                  <h4 class="card-title mb-1">5</h4>
+                  <p class="card-text text-muted mb-0">Favoritos</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Jobs & Quick Actions -->
+      <div class="row">
+        <!-- Recent Jobs -->
+        <div class="col-lg-8 mb-4">
+          <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-0">
+              <h5 class="card-title mb-0">Vagas Recentes</h5>
+            </div>
+            <div class="card-body">
+              <div class="list-group list-group-flush">
+                <div
+                  *ngFor="let job of recentJobs"
+                  class="list-group-item px-0"
+                >
+                  <div
+                    class="d-flex align-items-center justify-content-between"
+                  >
+                    <div>
+                      <h6 class="mb-1">{{ job.title }}</h6>
+                      <p class="text-muted mb-1 small">
+                        {{ job.company }} • {{ job.location }}
+                      </p>
+                      <div class="d-flex align-items-center">
+                        <span class="badge bg-light text-dark me-2">{{
+                          job.salary
+                        }}</span>
+                        <span class="badge bg-success me-2"
+                          >{{ job.match }}% Match</span
+                        >
+                        <span class="badge bg-secondary">{{ job.type }}</span>
+                      </div>
+                    </div>
+                    <div class="dropdown">
+                      <button
+                        class="btn btn-outline-secondary btn-sm"
+                        data-bs-toggle="dropdown"
+                      >
+                        <i class="bi bi-three-dots"></i>
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li>
+                          <a class="dropdown-item" href="#"
+                            ><i class="bi bi-star me-2"></i>Favoritar</a
+                          >
+                        </li>
+                        <li>
+                          <a class="dropdown-item" href="#"
+                            ><i class="bi bi-send me-2"></i>Candidatar</a
+                          >
+                        </li>
+                        <li><hr class="dropdown-divider" /></li>
+                        <li>
+                          <a class="dropdown-item" href="#"
+                            ><i class="bi bi-eye me-2"></i>Ver detalhes</a
+                          >
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="col-lg-4 mb-4">
+          <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-0">
+              <h5 class="card-title mb-0">Ações Rápidas</h5>
+            </div>
+            <div class="card-body">
+              <div class="d-grid gap-2">
+                <button class="btn btn-primary btn-lg">
+                  <i class="bi bi-robot me-2"></i>Ativar Rastreador
+                </button>
+                <button class="btn btn-outline-primary">
+                  <i class="bi bi-upload me-2"></i>Upload do CV
+                </button>
+                <button class="btn btn-outline-success">
+                  <i class="bi bi-graph-up me-2"></i>Ver Analytics
+                </button>
+                <button class="btn btn-outline-info">
+                  <i class="bi bi-bell me-2"></i>Configurar Alertas
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
