@@ -1,0 +1,324 @@
+<div class="cv-analyzer-page">
+  <!-- Header -->
+  <div class="analyzer-header">
+    <div class="container-fluid">
+      <div class="header-content">
+        <div class="header-text">
+          <h1 class="page-title">
+            Analisador de <span class="highlight">Currículo</span>
+          </h1>
+          <p class="page-subtitle">
+            Obtenha insights inteligentes para melhorar suas chances nas vagas
+          </p>
+        </div>
+        <div class="header-stats">
+          <div class="stat-badge">
+            <span class="stat-number">{{ analysisStats.analysesDone }}</span>
+            <span class="stat-label">Análises Realizadas</span>
+          </div>
+          <div class="stat-badge">
+            <span class="stat-number">{{ analysisStats.avgScore }}%</span>
+            <span class="stat-label">Score Médio</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="analyzer-main">
+    <div class="container-fluid">
+      <div class="analyzer-layout">
+        <!-- Upload Section -->
+        <div class="upload-section">
+          <div
+            class="upload-card"
+            [class.analyzing]="isAnalyzing"
+            [class.has-file]="selectedFile"
+          >
+            <!-- Drag & Drop Area -->
+            <div
+              class="drop-zone"
+              (drop)="onFileDrop($event)"
+              (dragover)="onDragOver($event)"
+              (dragleave)="onDragLeave($event)"
+              [class.dragover]="isDragOver"
+            >
+              <div class="drop-content" *ngIf="!selectedFile && !isAnalyzing">
+                <div class="upload-icon">
+                  <i class="bi bi-cloud-upload"></i>
+                </div>
+                <h3 class="upload-title">Arraste seu currículo aqui</h3>
+                <p class="upload-subtitle">ou clique para procurar</p>
+                <input
+                  type="file"
+                  #fileInput
+                  (change)="onFileSelected($event)"
+                  accept=".pdf,.doc,.docx,.txt"
+                  class="file-input"
+                />
+                <button class="browse-btn" (click)="fileInput.click()">
+                  Procurar Arquivo
+                </button>
+                <div class="supported-formats">
+                  <span class="format-tag">PDF</span>
+                  <span class="format-tag">DOC</span>
+                  <span class="format-tag">DOCX</span>
+                  <span class="format-tag">TXT</span>
+                </div>
+              </div>
+
+              <!-- File Selected State -->
+              <div class="file-selected" *ngIf="selectedFile && !isAnalyzing">
+                <div class="file-icon">
+                  <i class="bi bi-file-earmark-text"></i>
+                </div>
+                <div class="file-info">
+                  <h4 class="file-name">{{ selectedFile.name }}</h4>
+                  <p class="file-size">{{ getFileSize(selectedFile.size) }}</p>
+                </div>
+                <button class="remove-file" (click)="removeFile()">
+                  <i class="bi bi-x"></i>
+                </button>
+              </div>
+
+              <!-- Analyzing State -->
+              <div class="analyzing-state" *ngIf="isAnalyzing">
+                <div class="analyzing-icon">
+                  <div class="spinner"></div>
+                </div>
+                <h3 class="analyzing-title">Analisando seu currículo...</h3>
+                <p class="analyzing-subtitle">
+                  Nossa IA está extraindo insights valiosos
+                </p>
+                <div class="progress-bar">
+                  <div
+                    class="progress-fill"
+                    [style.width]="analysisProgress + '%'"
+                  ></div>
+                </div>
+                <span class="progress-text"
+                  >{{ analysisProgress }}% completo</span
+                >
+              </div>
+            </div>
+
+            <!-- Target Job Input -->
+            <div class="target-job-input" *ngIf="selectedFile && !isAnalyzing">
+              <label class="input-label">
+                <i class="bi bi-bullseye me-2"></i>
+                Para qual vaga você está se candidatando? (Opcional)
+              </label>
+              <input
+                type="text"
+                class="job-input"
+                [(ngModel)]="targetJob"
+                placeholder="Ex: Desenvolvedor Frontend Angular Pleno"
+              />
+              <small class="input-help">
+                A análise será mais precisa se você informar a vaga desejada
+              </small>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons" *ngIf="selectedFile && !isAnalyzing">
+              <button class="btn secondary-btn" (click)="removeFile()">
+                <i class="bi bi-x me-2"></i>
+                Cancelar
+              </button>
+              <button
+                class="btn primary-btn"
+                (click)="analyzeCV()"
+                [disabled]="!selectedFile"
+              >
+                <i class="bi bi-magic me-2"></i>
+                Analisar com IA
+              </button>
+            </div>
+          </div>
+
+          <!-- Quick Tips -->
+          <div class="tips-card">
+            <h3 class="tips-title">
+              <i class="bi bi-lightbulb me-2"></i>
+              Dicas para Melhor Análise
+            </h3>
+            <ul class="tips-list">
+              <li>
+                <i class="bi bi-check-circle"></i>
+                Use formato PDF para melhor preservação do layout
+              </li>
+              <li>
+                <i class="bi bi-check-circle"></i>
+                Inclua todas suas experiências relevantes
+              </li>
+              <li>
+                <i class="bi bi-check-circle"></i>
+                Liste habilidades técnicas e soft skills
+              </li>
+              <li>
+                <i class="bi bi-check-circle"></i>
+                Inclua projetos pessoais e certificações
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="results-section" *ngIf="analysisResult">
+          <div class="results-header">
+            <h2 class="results-title">Análise do Seu Currículo</h2>
+            <div class="overall-score">
+              <div
+                class="score-circle"
+                [class]="getScoreClass(analysisResult.overallScore)"
+              >
+                <span class="score-value"
+                  >{{ analysisResult.overallScore }}%</span
+                >
+                <span class="score-label">Score Geral</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Score Breakdown -->
+          <div class="score-breakdown">
+            <div
+              class="score-category"
+              *ngFor="let category of analysisResult.categories"
+            >
+              <div class="category-header">
+                <span class="category-name">{{ category.name }}</span>
+                <span
+                  class="category-score"
+                  [class]="getScoreClass(category.score)"
+                >
+                  {{ category.score }}%
+                </span>
+              </div>
+              <div class="score-bar">
+                <div
+                  class="score-fill"
+                  [style.width]="category.score + '%'"
+                ></div>
+              </div>
+              <div class="category-feedback">
+                <p class="feedback-text">{{ category.feedback }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Key Insights -->
+          <div class="insights-grid">
+            <div class="insight-card positive">
+              <div class="insight-header">
+                <i class="bi bi-check-circle-fill"></i>
+                <h4>Pontos Fortes</h4>
+              </div>
+              <ul class="insight-list">
+                <li *ngFor="let strength of analysisResult.strengths">
+                  {{ strength }}
+                </li>
+              </ul>
+            </div>
+
+            <div class="insight-card improvement">
+              <div class="insight-header">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <h4>Áreas para Melhorar</h4>
+              </div>
+              <ul class="insight-list">
+                <li *ngFor="let improvement of analysisResult.improvements">
+                  {{ improvement }}
+                </li>
+              </ul>
+            </div>
+
+            <div class="insight-card recommendation">
+              <div class="insight-header">
+                <i class="bi bi-star-fill"></i>
+                <h4>Recomendações</h4>
+              </div>
+              <ul class="insight-list">
+                <li
+                  *ngFor="let recommendation of analysisResult.recommendations"
+                >
+                  {{ recommendation }}
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Skills Analysis -->
+          <div class="skills-analysis">
+            <h3 class="section-title">Análise de Habilidades</h3>
+            <div class="skills-grid">
+              <div
+                class="skill-category"
+                *ngFor="let skillCat of analysisResult.skills"
+              >
+                <h4 class="skill-category-name">{{ skillCat.category }}</h4>
+                <div class="skill-tags">
+                  <span
+                    *ngFor="let skill of skillCat.skills"
+                    class="skill-tag"
+                    [class]="getSkillLevelClass(skill.level)"
+                  >
+                    {{ skill.name }}
+                    <span class="skill-level">{{ skill.level }}</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ATS Optimization -->
+          <div class="ats-optimization">
+            <h3 class="section-title">
+              <i class="bi bi-robot me-2"></i>
+              Otimização para Sistemas ATS
+            </h3>
+            <div class="ats-metrics">
+              <div
+                class="ats-metric"
+                *ngFor="let metric of analysisResult.atsMetrics"
+              >
+                <span class="metric-name">{{ metric.name }}</span>
+                <span class="metric-value" [class]="metric.status">
+                  {{ metric.value }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="results-actions">
+            <button class="btn outline-btn">
+              <i class="bi bi-download me-2"></i>
+              Exportar Relatório
+            </button>
+            <button class="btn secondary-btn">
+              <i class="bi bi-arrow-clockwise me-2"></i>
+              Analizar Outro CV
+            </button>
+            <button class="btn primary-btn" routerLink="/jobs">
+              <i class="bi bi-search me-2"></i>
+              Buscar Vagas Compatíveis
+            </button>
+          </div>
+        </div>
+
+        <!-- Empty Results State -->
+        <div class="empty-results" *ngIf="!analysisResult && !selectedFile">
+          <div class="empty-illustration">
+            <i class="bi bi-file-earmark-text"></i>
+          </div>
+          <h3>Comece analisando seu currículo</h3>
+          <p>
+            Faça upload do seu CV para receber uma análise detalhada da nossa IA
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
