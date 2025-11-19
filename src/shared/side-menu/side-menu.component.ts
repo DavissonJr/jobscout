@@ -29,7 +29,6 @@ export class SideMenuComponent {
       route: '/applications',
       badge: 3,
     },
-    { icon: 'bi-star', label: 'Favoritos', route: '/favorites' },
   ];
 
   toolsMenu: MenuItem[] = [
