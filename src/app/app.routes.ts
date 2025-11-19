@@ -14,6 +14,7 @@ export const routes: Routes = [
   { path: 'tracker', component: TrackerComponent },
   { path: 'cv-analyzer', component: CvAnalyzerComponent },
   { path: 'followup', component: AutoFollowupPageComponent },
+  { path: 'upgrade', component: HomeComponent },
   { path: 'analytics', component: HomeComponent },
   { path: 'companies', component: HomeComponent },
   { path: 'salaries', component: HomeComponent },
