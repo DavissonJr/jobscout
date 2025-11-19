@@ -1,0 +1,390 @@
+<div class="tracker-page">
+  <!-- Header -->
+  <div class="tracker-header">
+    <div class="container-fluid">
+      <div class="header-content">
+        <div class="header-text">
+          <h1 class="page-title">
+            Rastreador de <span class="highlight">Vagas</span>
+          </h1>
+          <p class="page-subtitle">
+            Configure seu assistente pessoal para encontrar oportunidades ideais
+          </p>
+        </div>
+        <div class="header-stats">
+          <div class="stat-badge">
+            <span class="stat-number">{{ stats.activeSearches }}</span>
+            <span class="stat-label">Buscas Ativas</span>
+          </div>
+          <div class="stat-badge">
+            <span class="stat-number">{{ stats.jobsFound }}</span>
+            <span class="stat-label">Vagas Encontradas</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="tracker-main">
+    <div class="container-fluid">
+      <div class="tracker-content">
+        <!-- Control Card -->
+        <div class="control-card">
+          <div class="control-header">
+            <div class="status-info">
+              <h2 class="control-title">Status do Rastreador</h2>
+              <div class="tracker-status" [class]="trackerStatus">
+                <span class="status-dot"></span>
+                {{ getStatusText() }}
+              </div>
+            </div>
+            <button
+              class="control-btn"
+              [class]="trackerStatus"
+              (click)="toggleTracker()"
+            >
+              <i class="bi" [class]="getActionIcon()"></i>
+              {{ getActionText() }}
+            </button>
+          </div>
+
+          <div class="status-description">
+            <p *ngIf="trackerStatus === 'active'">
+              <i class="bi bi-check-circle text-success"></i>
+              Seu rastreador está ativo e buscando vagas automaticamente.
+              <a routerLink="/jobs" class="view-jobs-link"
+                >Ver vagas encontradas</a
+              >
+            </p>
+            <p *ngIf="trackerStatus === 'paused'">
+              <i class="bi bi-pause-circle text-warning"></i>
+              Rastreador pausado. As buscas automáticas estão temporariamente
+              suspensas.
+            </p>
+            <p *ngIf="trackerStatus === 'stopped'">
+              <i class="bi bi-slash-circle text-danger"></i>
+              Rastreador inativo. Configure os critérios abaixo e inicie para
+              começar a buscar vagas.
+            </p>
+          </div>
+        </div>
+
+        <!-- Configuration Sections -->
+        <div class="config-sections">
+          <!-- Search Criteria -->
+          <div class="config-card">
+            <div class="config-header">
+              <h3 class="config-title">
+                <i class="bi bi-search me-2"></i>
+                Critérios de Busca
+              </h3>
+              <span class="config-badge"
+                >{{ config.keywords.length }} palavras-chave</span
+              >
+            </div>
+
+            <div class="config-content">
+              <div class="form-group">
+                <label class="form-label">Palavras-chave</label>
+                <div class="tags-input">
+                  <span *ngFor="let keyword of config.keywords" class="tag">
+                    {{ keyword }}
+                    <button class="tag-remove" (click)="removeKeyword(keyword)">
+                      ×
+                    </button>
+                  </span>
+                  <input
+                    #keywordInput
+                    type="text"
+                    class="tag-input"
+                    placeholder="Adicionar tecnologia, cargo..."
+                    (keyup.enter)="addKeyword(keywordInput)"
+                    (keyup.escape)="keywordInput.value = ''"
+                  />
+                </div>
+                <small class="form-help"
+                  >Pressione Enter para adicionar cada palavra-chave</small
+                >
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Localização</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    [(ngModel)]="config.location"
+                    placeholder="Ex: Remoto, São Paulo, Brasil..."
+                  />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Tipo de Vaga</label>
+                  <select class="form-control" [(ngModel)]="config.jobType">
+                    <option value="all">Todos os tipos</option>
+                    <option value="clt">CLT</option>
+                    <option value="pj">PJ</option>
+                    <option value="freelancer">Freelancer</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Salário Mínimo (R$)</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    [(ngModel)]="config.minSalary"
+                    placeholder="5000"
+                  />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Salário Máximo (R$)</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    [(ngModel)]="config.maxSalary"
+                    placeholder="15000"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Job Sources -->
+          <div class="config-card">
+            <div class="config-header">
+              <h3 class="config-title">
+                <i class="bi bi-link-45deg me-2"></i>
+                Fontes de Vagas
+              </h3>
+              <span class="config-badge"
+                >{{ getEnabledSourcesCount() }} ativas</span
+              >
+            </div>
+
+            <div class="config-content">
+              <div class="sources-grid">
+                <label
+                  *ngFor="let source of jobSources"
+                  class="source-checkbox"
+                >
+                  <input
+                    type="checkbox"
+                    [checked]="source.enabled"
+                    (change)="toggleSource(source)"
+                  />
+                  <span class="checkmark"></span>
+                  <span class="source-info">
+                    <i class="bi" [class]="source.icon"></i>
+                    {{ source.name }}
+                    <span class="source-description">{{
+                      source.description
+                    }}</span>
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Notification Settings -->
+          <div class="config-card">
+            <div class="config-header">
+              <h3 class="config-title">
+                <i class="bi bi-bell me-2"></i>
+                Notificações
+              </h3>
+              <span class="config-badge"
+                >{{ getEnabledNotificationsCount() }} ativas</span
+              >
+            </div>
+
+            <div class="config-content">
+              <div class="notification-settings">
+                <label class="setting-toggle">
+                  <span class="setting-info">
+                    <strong>Notificações por Email</strong>
+                    <span class="setting-description"
+                      >Receba novas vagas por email</span
+                    >
+                  </span>
+                  <label class="toggle-switch">
+                    <input
+                      type="checkbox"
+                      [(ngModel)]="config.notifications.email"
+                    />
+                    <span class="slider"></span>
+                  </label>
+                </label>
+
+                <label class="setting-toggle">
+                  <span class="setting-info">
+                    <strong>Notificações por Telegram</strong>
+                    <span class="setting-description"
+                      >Alertas instantâneos no Telegram</span
+                    >
+                  </span>
+                  <label class="toggle-switch">
+                    <input
+                      type="checkbox"
+                      [(ngModel)]="config.notifications.telegram"
+                    />
+                    <span class="slider"></span>
+                  </label>
+                </label>
+
+                <label class="setting-toggle">
+                  <span class="setting-info">
+                    <strong>Notificações por WhatsApp</strong>
+                    <span class="setting-description"
+                      >Mensagens diretas no WhatsApp</span
+                    >
+                  </span>
+                  <label class="toggle-switch">
+                    <input
+                      type="checkbox"
+                      [(ngModel)]="config.notifications.whatsapp"
+                    />
+                    <span class="slider"></span>
+                  </label>
+                </label>
+              </div>
+
+              <div class="notification-frequency">
+                <label class="form-label">Frequência de Busca</label>
+                <select class="form-control" [(ngModel)]="config.frequency">
+                  <option value="realtime">Tempo Real (recomendado)</option>
+                  <option value="hourly">A Cada Hora</option>
+                  <option value="4hours">A Cada 4 Horas</option>
+                  <option value="daily">Uma Vez por Dia</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Advanced Settings -->
+          <div class="config-card">
+            <div class="config-header">
+              <h3 class="config-title">
+                <i class="bi bi-gear me-2"></i>
+                Configurações Avançadas
+              </h3>
+            </div>
+
+            <div class="config-content">
+              <div class="advanced-settings">
+                <label class="setting-toggle">
+                  <span class="setting-info">
+                    <strong>Busca por Match Score</strong>
+                    <span class="setting-description"
+                      >Priorizar vagas com maior compatibilidade</span
+                    >
+                  </span>
+                  <label class="toggle-switch">
+                    <input
+                      type="checkbox"
+                      [(ngModel)]="config.advanced.matchScore"
+                    />
+                    <span class="slider"></span>
+                  </label>
+                </label>
+
+                <label class="setting-toggle">
+                  <span class="setting-info">
+                    <strong>Filtrar Empresas</strong>
+                    <span class="setting-description"
+                      >Excluir empresas específicas</span
+                    >
+                  </span>
+                  <label class="toggle-switch">
+                    <input
+                      type="checkbox"
+                      [(ngModel)]="config.advanced.companyFilter"
+                    />
+                    <span class="slider"></span>
+                  </label>
+                </label>
+
+                <label class="setting-toggle">
+                  <span class="setting-info">
+                    <strong>Detecção de Vagas Novas</strong>
+                    <span class="setting-description"
+                      >Alertar apenas para vagas recém-publicadas</span
+                    >
+                  </span>
+                  <label class="toggle-switch">
+                    <input
+                      type="checkbox"
+                      [(ngModel)]="config.advanced.newJobsOnly"
+                    />
+                    <span class="slider"></span>
+                  </label>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <button class="btn primary-btn large-btn" (click)="saveConfig()">
+            <i class="bi bi-save me-2"></i>
+            Salvar Configurações
+          </button>
+          <button class="btn secondary-btn" (click)="resetConfig()">
+            <i class="bi bi-arrow-clockwise me-2"></i>
+            Restaurar Padrão
+          </button>
+          <button class="btn outline-btn" routerLink="/jobs">
+            <i class="bi bi-eye me-2"></i>
+            Ver Vagas Encontradas
+          </button>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon success">
+              <i class="bi bi-check-circle"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-number">{{ stats.jobsFound }}</div>
+              <div class="stat-label">Vagas Encontradas</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon warning">
+              <i class="bi bi-clock"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-number">{{ stats.lastRun }}</div>
+              <div class="stat-label">Última Busca</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon info">
+              <i class="bi bi-graph-up"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-number">{{ stats.avgMatches }}%</div>
+              <div class="stat-label">Match Médio</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon primary">
+              <i class="bi bi-lightning"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-number">{{ stats.successRate }}%</div>
+              <div class="stat-label">Taxa de Sucesso</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
