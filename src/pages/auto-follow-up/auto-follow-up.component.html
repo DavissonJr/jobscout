@@ -1,0 +1,361 @@
+<div class="applications-page">
+  <!-- Header -->
+  <div class="applications-header">
+    <div class="container-fluid">
+      <div class="header-content">
+        <div class="header-text">
+          <h1 class="page-title">
+            Auto <span class="highlight">Follow-up</span>
+          </h1>
+          <p class="page-subtitle">
+            Sistema inteligente de acompanhamento automático das suas
+            candidaturas
+          </p>
+        </div>
+        <div class="header-stats">
+          <div class="stat-badge">
+            <span class="stat-number">{{ getTotalFollowups() }}</span>
+            <span class="stat-label">Total</span>
+          </div>
+          <div class="stat-badge">
+            <span class="stat-number">{{ getPendingFollowups() }}</span>
+            <span class="stat-label">Pendentes</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="applications-main">
+    <div class="container-fluid">
+      <div class="applications-content">
+        <!-- Conteúdo Principal -->
+        <div class="applications-list">
+          <!-- Card de Configurações -->
+          <div class="application-item">
+            <div class="application-main">
+              <div class="application-info">
+                <h3 class="job-title">Configurações do Auto Follow-up</h3>
+                <div class="company-details">
+                  <span class="company-name">
+                    <i class="bi bi-gear me-1"></i>
+                    Sistema Automático
+                  </span>
+                  <span class="application-source">
+                    <i class="bi bi-robot me-1"></i>
+                    IA JobScout
+                  </span>
+                </div>
+              </div>
+              <div class="application-actions">
+                <label class="toggle-switch-large">
+                  <input
+                    type="checkbox"
+                    [(ngModel)]="autoFollowupEnabled"
+                    (change)="toggleAutoFollowup()"
+                  />
+                  <span class="slider"></span>
+                  <span class="toggle-label">
+                    {{ autoFollowupEnabled ? "Ativado" : "Desativado" }}
+                  </span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Configurações Detalhadas -->
+            <div class="followup-config-content" *ngIf="autoFollowupEnabled">
+              <div class="config-grid">
+                <!-- Intervalo -->
+                <div class="config-group">
+                  <label class="config-label">
+                    <i class="bi bi-clock-history"></i>
+                    Intervalo de Follow-up
+                  </label>
+                  <select class="config-select" [(ngModel)]="followupInterval">
+                    <option value="7">7 dias após candidatura</option>
+                    <option value="10">10 dias após candidatura</option>
+                    <option value="14">14 dias após candidatura</option>
+                    <option value="21">21 dias após candidatura</option>
+                  </select>
+                </div>
+
+                <!-- Métodos -->
+                <div class="config-group">
+                  <label class="config-label">
+                    <i class="bi bi-send"></i>
+                    Métodos de Envio
+                  </label>
+                  <div class="method-options">
+                    <label class="method-option">
+                      <input
+                        type="checkbox"
+                        [(ngModel)]="followupMethods.email"
+                      />
+                      <span class="checkmark"></span>
+                      E-mail
+                    </label>
+                    <label class="method-option">
+                      <input
+                        type="checkbox"
+                        [(ngModel)]="followupMethods.linkedin"
+                      />
+                      <span class="checkmark"></span>
+                      LinkedIn
+                    </label>
+                    <label class="method-option">
+                      <input
+                        type="checkbox"
+                        [(ngModel)]="followupMethods.platform"
+                      />
+                      <span class="checkmark"></span>
+                      Plataforma
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Template -->
+                <div class="config-group">
+                  <label class="config-label">
+                    <i class="bi bi-chat-text"></i>
+                    Template de Mensagem
+                  </label>
+                  <select class="config-select" [(ngModel)]="selectedTemplate">
+                    <option value="professional">Profissional</option>
+                    <option value="friendly">Amigável</option>
+                    <option value="direct">Direto</option>
+                    <option value="custom">Personalizado</option>
+                  </select>
+
+                  <div
+                    *ngIf="selectedTemplate === 'custom'"
+                    class="template-editor"
+                  >
+                    <textarea
+                      class="template-textarea"
+                      [(ngModel)]="customTemplate"
+                      placeholder="Escreva seu template personalizado..."
+                      rows="4"
+                    ></textarea>
+                    <div class="template-variables">
+                      <span
+                        class="variable-tag"
+                        (click)="insertVariable('{{cargo}}')"
+                        >Cargo</span
+                      >
+                      <span
+                        class="variable-tag"
+                        (click)="insertVariable('{{empresa}}')"
+                        >Empresa</span
+                      >
+                      <span
+                        class="variable-tag"
+                        (click)="insertVariable('{{tempo}}')"
+                        >Tempo</span
+                      >
+                      <span
+                        class="variable-tag"
+                        (click)="insertVariable('{{nome}}')"
+                        >Seu Nome</span
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Follow-ups Agendados -->
+          <div class="application-item" *ngIf="autoFollowupEnabled">
+            <div class="application-main">
+              <div class="application-info">
+                <h3 class="job-title">Follow-ups Agendados</h3>
+                <div class="company-details">
+                  <span class="company-name">
+                    <i class="bi bi-calendar-check me-1"></i>
+                    Próximos Envios
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Lista de Follow-ups -->
+            <div class="followups-list">
+              <div
+                *ngIf="getScheduledFollowups().length === 0"
+                class="empty-followups"
+              >
+                <i class="bi bi-calendar-x"></i>
+                <p>Nenhum follow-up agendado</p>
+                <small
+                  >Os follow-ups serão criados automaticamente para novas
+                  candidaturas</small
+                >
+              </div>
+
+              <div
+                *ngFor="let followup of getScheduledFollowups()"
+                class="followup-item"
+              >
+                <div class="followup-main">
+                  <h4 class="followup-job">{{ followup.jobTitle }}</h4>
+                  <span class="followup-company">{{ followup.company }}</span>
+
+                  <div class="followup-details">
+                    <span class="followup-date">
+                      <i class="bi bi-calendar"></i>
+                      {{ followup.scheduledDate }}
+                    </span>
+                    <span class="followup-method" [class]="followup.method">
+                      <i
+                        class="bi"
+                        [class]="getMethodIcon(followup.method)"
+                      ></i>
+                      {{ followup.method }}
+                    </span>
+                  </div>
+                </div>
+
+                <div class="followup-actions">
+                  <button
+                    class="action-btn execute-btn"
+                    (click)="executeFollowup(followup)"
+                    [disabled]="followup.status !== 'agendado'"
+                  >
+                    <i class="bi bi-send"></i>
+                    Executar Agora
+                  </button>
+                  <button
+                    class="action-btn cancel-btn"
+                    (click)="cancelFollowup(followup)"
+                  >
+                    <i class="bi bi-x-circle"></i>
+                    Cancelar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Histórico de Follow-ups -->
+          <div class="application-item" *ngIf="autoFollowupEnabled">
+            <div class="application-main">
+              <div class="application-info">
+                <h3 class="job-title">Histórico de Follow-ups</h3>
+                <div class="company-details">
+                  <span class="company-name">
+                    <i class="bi bi-clock-history me-1"></i>
+                    Últimos 30 dias
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="history-stats">
+              <div class="history-stat">
+                <div class="stat-number">{{ getTotalFollowups() }}</div>
+                <div class="stat-label">Total Enviados</div>
+              </div>
+              <div class="history-stat">
+                <div class="stat-number">{{ getResponseRate() }}%</div>
+                <div class="stat-label">Taxa de Resposta</div>
+              </div>
+              <div class="history-stat">
+                <div class="stat-number">{{ getSuccessRate() }}%</div>
+                <div class="stat-label">Taxa de Sucesso</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="applications-sidebar">
+          <!-- Status Card -->
+          <div class="sidebar-card">
+            <h3 class="sidebar-title">Status do Sistema</h3>
+            <div
+              class="system-status"
+              [class]="autoFollowupEnabled ? 'active' : 'inactive'"
+            >
+              <i
+                class="bi"
+                [class]="
+                  autoFollowupEnabled ? 'bi-check-circle' : 'bi-pause-circle'
+                "
+              ></i>
+              <span>{{
+                autoFollowupEnabled ? "Sistema Ativo" : "Sistema Inativo"
+              }}</span>
+            </div>
+            <p class="status-description">
+              {{
+                autoFollowupEnabled
+                  ? "O sistema está monitorando suas candidaturas automaticamente"
+                  : "Ative o sistema para começar o acompanhamento automático"
+              }}
+            </p>
+          </div>
+
+          <!-- Ações Rápidas -->
+          <div class="sidebar-card">
+            <h3 class="sidebar-title">Ações Rápidas</h3>
+            <div class="quick-actions-sidebar">
+              <button
+                class="quick-action-sidebar-btn"
+                (click)="exportHistory()"
+              >
+                <i class="bi bi-download"></i>
+                Exportar Histórico
+              </button>
+              <button class="quick-action-sidebar-btn" (click)="testTemplate()">
+                <i class="bi bi-envelope"></i>
+                Testar Template
+              </button>
+              <button
+                class="quick-action-sidebar-btn"
+                routerLink="/applications"
+              >
+                <i class="bi bi-arrow-left"></i>
+                Voltar para Candidaturas
+              </button>
+            </div>
+          </div>
+
+          <!-- Estatísticas -->
+          <div class="sidebar-card">
+            <h3 class="sidebar-title">Estatísticas</h3>
+            <div class="stats-grid">
+              <div class="stat-item">
+                <div class="stat-icon">
+                  <i class="bi bi-send-check"></i>
+                </div>
+                <div class="stat-info">
+                  <div class="stat-number">{{ getTotalFollowups() }}</div>
+                  <div class="stat-label">Follow-ups Enviados</div>
+                </div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-icon">
+                  <i class="bi bi-clock"></i>
+                </div>
+                <div class="stat-info">
+                  <div class="stat-number">{{ getPendingFollowups() }}</div>
+                  <div class="stat-label">Agendados</div>
+                </div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-icon">
+                  <i class="bi bi-graph-up"></i>
+                </div>
+                <div class="stat-info">
+                  <div class="stat-number">{{ getResponseRate() }}%</div>
+                  <div class="stat-label">Taxa de Resposta</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</div>
