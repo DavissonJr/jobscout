@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 interface MenuItem {
@@ -17,7 +17,7 @@ interface MenuItem {
   templateUrl: './side-menu.component.html',
   styleUrls: ['./side-menu.component.scss'],
 })
-export class SideMenuComponent {
+export class SideMenuComponent implements OnInit, OnDestroy {
   collapsed = false;
 
   mainMenu: MenuItem[] = [
@@ -43,7 +43,21 @@ export class SideMenuComponent {
     { icon: 'bi-cash-coin', label: 'Salários', route: '/salaries' },
   ];
 
+  ngOnInit() {
+    // Ouvir evento do header
+    window.addEventListener('toggleSideMenu', this.handleToggle.bind(this));
+  }
+
+  ngOnDestroy() {
+    // Remover listener quando componente for destruído
+    window.removeEventListener('toggleSideMenu', this.handleToggle.bind(this));
+  }
+
   toggleCollapse() {
     this.collapsed = !this.collapsed;
+  }
+
+  private handleToggle() {
+    this.toggleCollapse();
   }
 }

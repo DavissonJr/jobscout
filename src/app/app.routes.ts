@@ -5,6 +5,7 @@ import { ApplicationsComponent } from '../pages/applications/applications.compon
 import { TrackerComponent } from '../pages/tracker/tracker.component';
 import { CvAnalyzerComponent } from '../pages/cv-analyzer/cv-analyzer.component';
 import { AutoFollowupPageComponent } from '../pages/auto-follow-up/auto-follow-up.component';
+import { UpgradeComponent } from '../pages/upgrade/upgrade.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -14,7 +15,7 @@ export const routes: Routes = [
   { path: 'tracker', component: TrackerComponent },
   { path: 'cv-analyzer', component: CvAnalyzerComponent },
   { path: 'followup', component: AutoFollowupPageComponent },
-  { path: 'upgrade', component: HomeComponent },
+  { path: 'upgrade', component: UpgradeComponent },
   { path: 'analytics', component: HomeComponent },
   { path: 'companies', component: HomeComponent },
   { path: 'salaries', component: HomeComponent },

@@ -1,0 +1,335 @@
+<div class="upgrade-page">
+  <!-- Hero Section -->
+  <div class="upgrade-hero">
+    <div class="container-fluid">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <i class="bi bi-rocket-takeoff"></i>
+          <span>PREMIUM</span>
+        </div>
+        <h1 class="hero-title">
+          Transforme Sua <span class="gradient-text">Busca por Emprego</span>
+        </h1>
+        <p class="hero-subtitle">
+          Ferramentas inteligentes que automatizam sua busca e multiplicam suas
+          oportunidades
+        </p>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="stat-number">3x</div>
+            <div class="stat-label">Mais Entrevistas</div>
+          </div>
+          <div class="hero-stat">
+            <div class="stat-number">67%</div>
+            <div class="stat-label">Mais Respostas</div>
+          </div>
+          <div class="hero-stat">
+            <div class="stat-number">5⭐</div>
+            <div class="stat-label">Avaliação</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Planos -->
+  <div class="plans-section">
+    <div class="container-fluid">
+      <div class="plans-header">
+        <h2>Planos que Geram Resultados</h2>
+        <p>Escolha o que melhor se adapta à sua jornada</p>
+
+        <div class="billing-toggle">
+          <span class="billing-option" [class.active]="!annualBilling"
+            >Mensal</span
+          >
+          <label class="toggle-switch">
+            <input
+              type="checkbox"
+              [checked]="annualBilling"
+              (change)="toggleBilling()"
+            />
+            <span class="slider"></span>
+          </label>
+          <span class="billing-option" [class.active]="annualBilling"
+            >Anual</span
+          >
+          <div class="save-badge" *ngIf="annualBilling">
+            <i class="bi bi-gift"></i>
+            Economize 40%
+          </div>
+        </div>
+      </div>
+
+      <div class="plans-grid">
+        <!-- Plano Explorer -->
+        <div class="plan-card">
+          <div class="plan-header">
+            <h3>Explorer</h3>
+            <div class="plan-price">
+              <div class="price">GRÁTIS</div>
+              <div class="period">para sempre</div>
+            </div>
+            <p>Ideal para começar</p>
+          </div>
+
+          <div class="plan-features">
+            <div class="feature">
+              <i class="bi bi-check-circle"></i>
+              <span>10 candidaturas/mês</span>
+            </div>
+            <div class="feature">
+              <i class="bi bi-check-circle"></i>
+              <span>Acompanhamento básico</span>
+            </div>
+            <div class="feature">
+              <i class="bi bi-check-circle"></i>
+              <span>Análise simples de match</span>
+            </div>
+            <div class="feature disabled">
+              <i class="bi bi-x-circle"></i>
+              <span>Auto Follow-up</span>
+            </div>
+            <div class="feature disabled">
+              <i class="bi bi-x-circle"></i>
+              <span>Estatísticas avançadas</span>
+            </div>
+          </div>
+
+          <button class="plan-btn secondary" routerLink="/applications">
+            Usar Grátis
+          </button>
+        </div>
+
+        <!-- Plano Professional -->
+        <div class="plan-card featured">
+          <div class="plan-badge">
+            <i class="bi bi-star"></i>
+            MAIS POPULAR
+          </div>
+          <div class="plan-header">
+            <h3>Professional</h3>
+            <div class="plan-price">
+              <div class="price">
+                R$ {{ annualBilling ? "47" : "67" }}
+                <span class="currency">/mês</span>
+              </div>
+              <div class="period">
+                {{
+                  annualBilling ? "cobrado anualmente" : "cobrado mensalmente"
+                }}
+              </div>
+              <div class="original-price" *ngIf="annualBilling">
+                <s>R$ 67/mês</s>
+              </div>
+            </div>
+            <p>Para resultados acelerados</p>
+          </div>
+
+          <div class="plan-features">
+            <div class="feature">
+              <i class="bi bi-check-circle"></i>
+              <span>Candidaturas <strong>ilimitadas</strong></span>
+            </div>
+            <div class="feature">
+              <i class="bi bi-check-circle"></i>
+              <span>Auto Follow-up inteligente</span>
+            </div>
+            <div class="feature">
+              <i class="bi bi-check-circle"></i>
+              <span>Análise de Match com IA</span>
+            </div>
+            <div class="feature">
+              <i class="bi bi-check-circle"></i>
+              <span>Estatísticas detalhadas</span>
+            </div>
+            <div class="feature">
+              <i class="bi bi-check-circle"></i>
+              <span>Exportação de dados</span>
+            </div>
+            <div class="feature">
+              <i class="bi bi-check-circle"></i>
+              <span>Prioridade no suporte</span>
+            </div>
+          </div>
+
+          <button class="plan-btn primary" (click)="selectPlan('professional')">
+            Começar Agora
+            <i class="bi bi-arrow-right"></i>
+          </button>
+        </div>
+
+        <!-- Plano Enterprise -->
+        <div class="plan-card">
+          <div class="plan-header">
+            <h3>Enterprise</h3>
+            <div class="plan-price">
+              <div class="price">
+                R$ {{ annualBilling ? "97" : "127" }}
+                <span class="currency">/mês</span>
+              </div>
+              <div class="period">
+                {{
+                  annualBilling ? "cobrado anualmente" : "cobrado mensalmente"
+                }}
+              </div>
+            </div>
+            <p>Para transição de carreira</p>
+          </div>
+
+          <div class="plan-features">
+            <div class="feature">
+              <i class="bi bi-check-circle"></i>
+              <span>Todos os recursos Professional</span>
+            </div>
+            <div class="feature">
+              <i class="bi bi-check-circle"></i>
+              <span>Análise de perfil completa</span>
+            </div>
+            <div class="feature">
+              <i class="bi bi-check-circle"></i>
+              <span>Relatórios personalizados</span>
+            </div>
+            <div class="feature">
+              <i class="bi bi-check-circle"></i>
+              <span>API de integração</span>
+            </div>
+            <div class="feature">
+              <i class="bi bi-check-circle"></i>
+              <span>Suporte dedicado</span>
+            </div>
+          </div>
+
+          <button class="plan-btn secondary" (click)="selectPlan('enterprise')">
+            Escolher Enterprise
+            <i class="bi bi-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Comparação -->
+  <div class="comparison-section">
+    <div class="container-fluid">
+      <h2>Compare os Recursos</h2>
+
+      <div class="comparison-table">
+        <div class="comparison-header">
+          <div class="feature-category">Funcionalidades</div>
+          <div class="plan-column">Explorer</div>
+          <div class="plan-column featured">Professional</div>
+          <div class="plan-column">Enterprise</div>
+        </div>
+
+        <div class="comparison-row" *ngFor="let feature of comparisonFeatures">
+          <div class="feature-name">{{ feature.name }}</div>
+          <div class="feature-value">
+            <i class="bi" [class]="getFeatureIcon(feature.explorer)"></i>
+            <span>{{ feature.explorer }}</span>
+          </div>
+          <div class="feature-value featured">
+            <i class="bi" [class]="getFeatureIcon(feature.professional)"></i>
+            <span>{{ feature.professional }}</span>
+          </div>
+          <div class="feature-value">
+            <i class="bi" [class]="getFeatureIcon(feature.enterprise)"></i>
+            <span>{{ feature.enterprise }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Depoimentos Simples -->
+  <div class="testimonials-section">
+    <div class="container-fluid">
+      <h2>Já Transformou Carreiras</h2>
+
+      <div class="testimonials-simple">
+        <div class="testimonial-item">
+          <div class="testimonial-text">
+            &ldquo;O Auto Follow-up me poupou horas de trabalho. Consegui 3x
+            mais respostas das empresas.&rdquo;
+          </div>
+          <div class="testimonial-author">
+            <strong>Carlos Santos</strong>
+            <span>Desenvolvedor Sênior</span>
+          </div>
+        </div>
+
+        <div class="testimonial-item">
+          <div class="testimonial-text">
+            &ldquo;A análise de match me mostrou exatamente onde melhorar. Fui
+            contratado em 2 semanas!&rdquo;
+          </div>
+          <div class="testimonial-author">
+            <strong>Marina Oliveira</strong>
+            <span>Product Manager</span>
+          </div>
+        </div>
+
+        <div class="testimonial-item">
+          <div class="testimonial-text">
+            &ldquo;Vale cada centavo. Automatizou todo meu processo de busca e
+            me deu mais tranquilidade.&rdquo;
+          </div>
+          <div class="testimonial-author">
+            <strong>João Silva</strong>
+            <span>Data Scientist</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq-section">
+    <div class="container-fluid">
+      <h2>Dúvidas Frequentes</h2>
+
+      <div class="faq-grid">
+        <div class="faq-item" *ngFor="let faq of faqs; let i = index">
+          <div class="faq-question" (click)="toggleFaq(i)">
+            <span>{{ faq.question }}</span>
+            <i
+              class="bi"
+              [class]="faq.open ? 'bi-chevron-up' : 'bi-chevron-down'"
+            ></i>
+          </div>
+          <div class="faq-answer" [class.open]="faq.open">
+            <p>{{ faq.answer }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA Final -->
+  <div class="final-cta">
+    <div class="container-fluid">
+      <div class="cta-content">
+        <h2>Pronto para Revolucionar Sua Busca?</h2>
+        <p>
+          Junte-se a milhares de profissionais que já encontraram oportunidades
+          melhores
+        </p>
+
+        <div class="cta-buttons">
+          <button class="cta-btn primary" (click)="scrollToPlans()">
+            Assinar Agora
+            <i class="bi bi-lightning"></i>
+          </button>
+          <button class="cta-btn secondary" routerLink="/applications">
+            Experimentar Grátis
+          </button>
+        </div>
+
+        <div class="guarantee-badge">
+          <i class="bi bi-shield-check"></i>
+          <span>Garantia de 30 dias - Sem riscos</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
