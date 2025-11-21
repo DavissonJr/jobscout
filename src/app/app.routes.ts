@@ -8,6 +8,7 @@ import { AutoFollowupPageComponent } from '../pages/auto-follow-up/auto-follow-u
 import { UpgradeComponent } from '../pages/upgrade/upgrade.component';
 import { AnalyticsComponent } from '../pages/analytics/analytics.component';
 import { ProfileComponent } from '../pages/profile/profile.component';
+import { LoginComponent } from '../pages/auth/login/login.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -20,5 +21,6 @@ export const routes: Routes = [
   { path: 'upgrade', component: UpgradeComponent },
   { path: 'analytics', component: AnalyticsComponent },
   { path: 'profile', component: ProfileComponent },
+  { path: 'login', component: LoginComponent },
   { path: '**', redirectTo: '' },
 ];

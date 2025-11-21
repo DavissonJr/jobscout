@@ -1,0 +1,153 @@
+<div class="login-page">
+  <div class="login-container">
+    <!-- Header Brand -->
+    <div class="login-header">
+      <div class="brand-logo">
+        <div class="logo-icon">
+          <i class="bi bi-binoculars-fill"></i>
+        </div>
+        <div class="brand-text">
+          <span class="brand-primary">Job</span>
+          <span class="brand-secondary">Scout</span>
+        </div>
+      </div>
+      <p class="brand-tagline">Encontre sua oportunidade ideal</p>
+    </div>
+
+    <!-- Login Card -->
+    <div class="login-card">
+      <!-- Form Header -->
+      <div class="form-header">
+        <h2>Bem-vindo de volta</h2>
+        <p>Entre na sua conta para continuar</p>
+      </div>
+
+      <!-- Social Login -->
+      <div class="social-login">
+        <button class="social-btn google" (click)="loginWithGoogle()">
+          <i class="bi bi-google"></i>
+          Continuar com Google
+        </button>
+        <button class="social-btn linkedin" (click)="loginWithLinkedIn()">
+          <i class="bi bi-linkedin"></i>
+          Continuar com LinkedIn
+        </button>
+      </div>
+
+      <!-- Divider -->
+      <div class="divider">
+        <span>ou</span>
+      </div>
+
+      <!-- Login Form -->
+      <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <!-- Email Field -->
+        <div class="form-group">
+          <label for="email" class="form-label">E-mail</label>
+          <div class="input-group">
+            <i class="bi bi-envelope input-icon"></i>
+            <input
+              type="email"
+              id="email"
+              formControlName="email"
+              class="form-input"
+              placeholder="seu@email.com"
+              [class.error]="showEmailError()"
+            />
+          </div>
+          <div *ngIf="showEmailError()" class="error-message">
+            <i class="bi bi-exclamation-circle"></i>
+            Por favor, insira um e-mail válido
+          </div>
+        </div>
+
+        <!-- Password Field -->
+        <div class="form-group">
+          <div class="label-row">
+            <label for="password" class="form-label">Senha</label>
+            <a href="#" class="forgot-link" (click)="forgotPassword($event)"
+              >Esqueceu a senha?</a
+            >
+          </div>
+          <div class="input-group">
+            <i class="bi bi-lock input-icon"></i>
+            <input
+              [type]="showPassword ? 'text' : 'password'"
+              id="password"
+              formControlName="password"
+              class="form-input"
+              placeholder="Sua senha"
+              [class.error]="showPasswordError()"
+            />
+            <button
+              type="button"
+              class="password-toggle"
+              (click)="togglePassword()"
+            >
+              <i
+                class="bi"
+                [class.bi-eye]="!showPassword"
+                [class.bi-eye-slash]="showPassword"
+              ></i>
+            </button>
+          </div>
+          <div *ngIf="showPasswordError()" class="error-message">
+            <i class="bi bi-exclamation-circle"></i>
+            A senha deve ter pelo menos 6 caracteres
+          </div>
+        </div>
+
+        <!-- Remember Me -->
+        <div class="form-options">
+          <label class="checkbox-label">
+            <input
+              type="checkbox"
+              formControlName="rememberMe"
+              class="checkbox-input"
+            />
+            <span class="checkmark"></span>
+            Lembrar de mim
+          </label>
+        </div>
+
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          class="login-btn"
+          [disabled]="loginForm.invalid || isLoading"
+          [class.loading]="isLoading"
+        >
+          <span *ngIf="!isLoading">Entrar na conta</span>
+          <span *ngIf="isLoading" class="loading-spinner">
+            <i class="bi bi-arrow-repeat"></i>
+            Entrando...
+          </span>
+        </button>
+      </form>
+
+      <!-- Signup Link -->
+      <div class="signup-section">
+        <p>
+          Não tem uma conta?
+          <a routerLink="/signup" class="signup-link">Criar conta</a>
+        </p>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="login-footer">
+      <div class="security-badge">
+        <i class="bi bi-shield-check"></i>
+        <span>Seus dados estão seguros conosco</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div *ngIf="isLoading" class="loading-overlay">
+    <div class="loading-content">
+      <div class="spinner"></div>
+      <p>Conectando você às melhores oportunidades...</p>
+    </div>
+  </div>
+</div>
