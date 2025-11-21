@@ -1,0 +1,273 @@
+<div class="analytics-page">
+  <!-- Header -->
+  <div class="analytics-header">
+    <div class="container-fluid">
+      <div class="header-content">
+        <div class="header-text">
+          <h1 class="page-title">
+            <span class="highlight">Analytics</span>
+          </h1>
+          <p class="page-subtitle">
+            Insights inteligentes sobre suas candidaturas e desempenho
+          </p>
+        </div>
+        <div class="header-actions">
+          <div class="date-filter">
+            <select
+              class="filter-select"
+              [(ngModel)]="selectedPeriod"
+              (change)="onPeriodChange()"
+            >
+              <option value="7">Últimos 7 dias</option>
+              <option value="30">Últimos 30 dias</option>
+              <option value="90">Últimos 3 meses</option>
+              <option value="365">Último ano</option>
+            </select>
+          </div>
+          <button class="export-btn" (click)="exportData()">
+            <i class="bi bi-download"></i>
+            Exportar Dados
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="analytics-main">
+    <div class="container-fluid">
+      <div class="analytics-content">
+        <!-- Métricas Principais -->
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-icon">
+              <i class="bi bi-send-check"></i>
+            </div>
+            <div class="metric-content">
+              <div class="metric-number">{{ metrics.totalApplications }}</div>
+              <div class="metric-label">Total de Candidaturas</div>
+              <div class="metric-trend positive">
+                <i class="bi bi-arrow-up"></i>
+                {{ metrics.applicationGrowth }}% vs período anterior
+              </div>
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-icon">
+              <i class="bi bi-eye"></i>
+            </div>
+            <div class="metric-content">
+              <div class="metric-number">{{ metrics.responseRate }}%</div>
+              <div class="metric-label">Taxa de Resposta</div>
+              <div class="metric-trend positive">
+                <i class="bi bi-arrow-up"></i>
+                {{ metrics.responseGrowth }}% vs período anterior
+              </div>
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-icon">
+              <i class="bi bi-calendar-check"></i>
+            </div>
+            <div class="metric-content">
+              <div class="metric-number">{{ metrics.interviewRate }}%</div>
+              <div class="metric-label">Taxa de Entrevistas</div>
+              <div class="metric-trend neutral">
+                <i class="bi bi-dash"></i>
+                {{ metrics.interviewGrowth }}% vs período anterior
+              </div>
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-icon">
+              <i class="bi bi-graph-up"></i>
+            </div>
+            <div class="metric-content">
+              <div class="metric-number">{{ metrics.averageMatch }}%</div>
+              <div class="metric-label">Match Médio</div>
+              <div class="metric-trend positive">
+                <i class="bi bi-arrow-up"></i>
+                {{ metrics.matchGrowth }}% vs período anterior
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gráficos e Visualizações -->
+        <div class="charts-grid">
+          <!-- Gráfico de Candidaturas ao Longo do Tempo -->
+          <div class="chart-card full-width">
+            <div class="chart-header">
+              <h3>Candidaturas ao Longo do Tempo</h3>
+              <div class="chart-legend">
+                <div class="legend-item">
+                  <span class="legend-color sent"></span>
+                  Candidaturas Enviadas
+                </div>
+                <div class="legend-item">
+                  <span class="legend-color responses"></span>
+                  Respostas Recebidas
+                </div>
+              </div>
+            </div>
+            <div class="chart-container">
+              <canvas #applicationsChart></canvas>
+            </div>
+          </div>
+
+          <!-- Métricas de Performance -->
+          <div class="chart-card">
+            <div class="chart-header">
+              <h3>Status das Candidaturas</h3>
+            </div>
+            <div class="chart-container">
+              <canvas #statusChart></canvas>
+            </div>
+          </div>
+
+          <!-- Distribuição por Tipo de Vaga -->
+          <div class="chart-card">
+            <div class="chart-header">
+              <h3>Distribuição por Tipo</h3>
+            </div>
+            <div class="chart-container">
+              <canvas #typeChart></canvas>
+            </div>
+          </div>
+
+          <!-- Métricas de Engajamento -->
+          <div class="chart-card full-width">
+            <div class="chart-header">
+              <h3>Métricas de Engajamento</h3>
+            </div>
+            <div class="engagement-metrics">
+              <div class="engagement-item">
+                <div class="engagement-value">
+                  {{ metrics.averageResponseTime }}h
+                </div>
+                <div class="engagement-label">Tempo Médio de Resposta</div>
+                <div class="engagement-trend negative">
+                  <i class="bi bi-arrow-down"></i>
+                  2h a menos
+                </div>
+              </div>
+              <div class="engagement-item">
+                <div class="engagement-value">{{ metrics.followUpRate }}%</div>
+                <div class="engagement-label">Taxa de Follow-up</div>
+                <div class="engagement-trend positive">
+                  <i class="bi bi-arrow-up"></i>
+                  15% a mais
+                </div>
+              </div>
+              <div class="engagement-item">
+                <div class="engagement-value">
+                  {{ metrics.conversionRate }}%
+                </div>
+                <div class="engagement-label">Taxa de Conversão</div>
+                <div class="engagement-trend positive">
+                  <i class="bi bi-arrow-up"></i>
+                  8% a mais
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Análises Detalhadas -->
+        <div class="analysis-grid">
+          <!-- Top Empresas -->
+          <div class="analysis-card">
+            <div class="analysis-header">
+              <h3>Top Empresas por Resposta</h3>
+              <span class="analysis-badge">{{ companyStats.length }}</span>
+            </div>
+            <div class="companies-list">
+              <div *ngFor="let company of companyStats" class="company-item">
+                <div class="company-info">
+                  <div class="company-avatar">
+                    <i class="bi bi-building"></i>
+                  </div>
+                  <div class="company-details">
+                    <div class="company-name">{{ company.name }}</div>
+                    <div class="company-stats">
+                      {{ company.applications }} cand. •
+                      {{ company.responseRate }}% resp.
+                    </div>
+                  </div>
+                </div>
+                <div class="company-match">
+                  <div class="match-value">{{ company.match }}%</div>
+                  <div class="match-label">match</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Insights da IA -->
+          <div class="analysis-card">
+            <div class="analysis-header">
+              <h3>Insights da IA</h3>
+              <i class="bi bi-robot"></i>
+            </div>
+            <div class="insights-list">
+              <div class="insight-item positive">
+                <div class="insight-icon">
+                  <i class="bi bi-lightning"></i>
+                </div>
+                <div class="insight-content">
+                  <h4>Período Mais Produtivo</h4>
+                  <p>Segundas-feiras entre 9h-11h geram 35% mais respostas</p>
+                </div>
+              </div>
+              <div class="insight-item warning">
+                <div class="insight-icon">
+                  <i class="bi bi-exclamation-triangle"></i>
+                </div>
+                <div class="insight-content">
+                  <h4>Oportunidade de Melhoria</h4>
+                  <p>
+                    Candidaturas para vagas de "Tech Lead" têm match 22% menor
+                  </p>
+                </div>
+              </div>
+              <div class="insight-item info">
+                <div class="insight-icon">
+                  <i class="bi bi-graph-up-arrow"></i>
+                </div>
+                <div class="insight-content">
+                  <h4>Tendência Positiva</h4>
+                  <p>Seu match médio aumentou 15% nos últimos 30 dias</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Histórico de Atividades -->
+          <div class="analysis-card">
+            <div class="analysis-header">
+              <h3>Atividades Recentes</h3>
+              <span class="analysis-badge">{{ recentActivities.length }}</span>
+            </div>
+            <div class="activities-list">
+              <div
+                *ngFor="let activity of recentActivities"
+                class="activity-item"
+              >
+                <div class="activity-icon" [class]="activity.type">
+                  <i class="bi" [class]="activity.icon"></i>
+                </div>
+                <div class="activity-content">
+                  <p class="activity-text">{{ activity.description }}</p>
+                  <span class="activity-time">{{ activity.time }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

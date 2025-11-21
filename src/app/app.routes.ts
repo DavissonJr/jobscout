@@ -6,6 +6,7 @@ import { TrackerComponent } from '../pages/tracker/tracker.component';
 import { CvAnalyzerComponent } from '../pages/cv-analyzer/cv-analyzer.component';
 import { AutoFollowupPageComponent } from '../pages/auto-follow-up/auto-follow-up.component';
 import { UpgradeComponent } from '../pages/upgrade/upgrade.component';
+import { AnalyticsComponent } from '../pages/analytics/analytics.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -16,8 +17,6 @@ export const routes: Routes = [
   { path: 'cv-analyzer', component: CvAnalyzerComponent },
   { path: 'followup', component: AutoFollowupPageComponent },
   { path: 'upgrade', component: UpgradeComponent },
-  { path: 'analytics', component: HomeComponent },
-  { path: 'companies', component: HomeComponent },
-  { path: 'salaries', component: HomeComponent },
+  { path: 'analytics', component: AnalyticsComponent },
   { path: '**', redirectTo: '' },
 ];

@@ -39,8 +39,6 @@ export class SideMenuComponent implements OnInit, OnDestroy {
 
   analyticsMenu: MenuItem[] = [
     { icon: 'bi-graph-up', label: 'Evolução', route: '/analytics' },
-    { icon: 'bi-building', label: 'Empresas', route: '/companies' },
-    { icon: 'bi-cash-coin', label: 'Salários', route: '/salaries' },
   ];
 
   ngOnInit() {
