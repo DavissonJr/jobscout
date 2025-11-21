@@ -1,0 +1,413 @@
+<div class="signup-page">
+  <div class="signup-container">
+    <!-- Header Brand -->
+    <div class="signup-header">
+      <div class="brand-logo">
+        <div class="logo-icon">
+          <i class="bi bi-binoculars-fill"></i>
+        </div>
+        <div class="brand-text">
+          <span class="brand-primary">Job</span>
+          <span class="brand-secondary">Scout</span>
+        </div>
+      </div>
+      <p class="brand-tagline">Comece sua jornada profissional</p>
+    </div>
+
+    <!-- Signup Card -->
+    <div class="signup-card">
+      <!-- Form Header -->
+      <div class="form-header">
+        <h2>Criar sua conta</h2>
+        <p>Preencha seus dados para começar</p>
+      </div>
+
+      <!-- Progress Steps -->
+      <div class="progress-steps">
+        <div class="step active" [class.completed]="currentStep > 1">
+          <div class="step-number">1</div>
+          <span class="step-label">Básico</span>
+        </div>
+        <div
+          class="step"
+          [class.active]="currentStep === 2"
+          [class.completed]="currentStep > 2"
+        >
+          <div class="step-number">2</div>
+          <span class="step-label">Profissional</span>
+        </div>
+        <div class="step" [class.active]="currentStep === 3">
+          <div class="step-number">3</div>
+          <span class="step-label">Senha</span>
+        </div>
+      </div>
+
+      <!-- Step 1: Basic Info -->
+      <form
+        *ngIf="currentStep === 1"
+        class="signup-form"
+        [formGroup]="basicInfoForm"
+        (ngSubmit)="nextStep()"
+      >
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="firstName" class="form-label">Nome *</label>
+            <input
+              type="text"
+              id="firstName"
+              formControlName="firstName"
+              class="form-input"
+              placeholder="Seu nome"
+              [class.error]="showFieldError('firstName')"
+            />
+            <div *ngIf="showFieldError('firstName')" class="error-message">
+              <i class="bi bi-exclamation-circle"></i>
+              Nome é obrigatório
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="lastName" class="form-label">Sobrenome *</label>
+            <input
+              type="text"
+              id="lastName"
+              formControlName="lastName"
+              class="form-input"
+              placeholder="Seu sobrenome"
+              [class.error]="showFieldError('lastName')"
+            />
+            <div *ngIf="showFieldError('lastName')" class="error-message">
+              <i class="bi bi-exclamation-circle"></i>
+              Sobrenome é obrigatório
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email" class="form-label">E-mail *</label>
+          <div class="input-group">
+            <i class="bi bi-envelope input-icon"></i>
+            <input
+              type="email"
+              id="email"
+              formControlName="email"
+              class="form-input"
+              placeholder="seu@email.com"
+              [class.error]="showFieldError('email')"
+            />
+          </div>
+          <div *ngIf="showFieldError('email')" class="error-message">
+            <i class="bi bi-exclamation-circle"></i>
+            {{ getEmailError() }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Você é?</label>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input
+                type="radio"
+                formControlName="userType"
+                value="candidate"
+              />
+              <span class="radio-checkmark"></span>
+              <div class="radio-content">
+                <i class="bi bi-person"></i>
+                <div>
+                  <strong>Candidato</strong>
+                  <span>Buscando oportunidades</span>
+                </div>
+              </div>
+            </label>
+            <!--
+            <label class="radio-option">
+              <input
+                type="radio"
+                formControlName="userType"
+                value="recruiter"
+              />
+              <span class="radio-checkmark"></span>
+              <div class="radio-content">
+                <i class="bi bi-briefcase"></i>
+                <div>
+                  <strong>Recrutador</strong>
+                  <span>Contratando talentos</span>
+                </div>
+              </div>
+            </label> -->
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          class="btn primary"
+          [disabled]="basicInfoForm.invalid"
+        >
+          Continuar
+          <i class="bi bi-arrow-right"></i>
+        </button>
+      </form>
+
+      <!-- Step 2: Professional Info -->
+      <form
+        *ngIf="currentStep === 2"
+        class="signup-form"
+        [formGroup]="professionalForm"
+        (ngSubmit)="nextStep()"
+      >
+        <div class="form-group">
+          <label for="title" class="form-label">Cargo Atual</label>
+          <input
+            type="text"
+            id="title"
+            formControlName="title"
+            class="form-input"
+            placeholder="Ex: Desenvolvedor Front-end"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="company" class="form-label">Empresa</label>
+          <input
+            type="text"
+            id="company"
+            formControlName="company"
+            class="form-input"
+            placeholder="Onde você trabalha"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="seniority" class="form-label">Nível de Senioridade</label>
+          <select id="seniority" formControlName="seniority" class="form-input">
+            <option value="">Selecione seu nível</option>
+            <option value="intern">Estagiário</option>
+            <option value="junior">Júnior</option>
+            <option value="mid">Pleno</option>
+            <option value="senior">Sênior</option>
+            <option value="lead">Líder/Especialista</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="skills" class="form-label">Habilidades Principais</label>
+          <div class="skills-input">
+            <input
+              type="text"
+              #skillInput
+              class="form-input"
+              placeholder="Adicione suas habilidades"
+              (keyup.enter)="addSkill(skillInput)"
+            />
+            <button
+              type="button"
+              class="add-skill-btn"
+              (click)="addSkill(skillInput)"
+            >
+              <i class="bi bi-plus"></i>
+            </button>
+          </div>
+          <div class="skills-tags">
+            <span
+              *ngFor="let skill of professionalForm.get('skills')?.value"
+              class="skill-tag"
+            >
+              {{ skill }}
+              <i class="bi bi-x" (click)="removeSkill(skill)"></i>
+            </span>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn secondary" (click)="prevStep()">
+            <i class="bi bi-arrow-left"></i>
+            Voltar
+          </button>
+          <button type="submit" class="btn primary">
+            Continuar
+            <i class="bi bi-arrow-right"></i>
+          </button>
+        </div>
+      </form>
+
+      <!-- Step 3: Password -->
+      <form
+        *ngIf="currentStep === 3"
+        class="signup-form"
+        [formGroup]="passwordForm"
+        (ngSubmit)="onSubmit()"
+      >
+        <div class="form-group">
+          <label for="password" class="form-label">Senha *</label>
+          <div class="input-group">
+            <i class="bi bi-lock input-icon"></i>
+            <input
+              [type]="showPassword ? 'text' : 'password'"
+              id="password"
+              formControlName="password"
+              class="form-input"
+              placeholder="Crie uma senha segura"
+              [class.error]="showFieldError('password')"
+            />
+            <button
+              type="button"
+              class="password-toggle"
+              (click)="togglePassword()"
+            >
+              <i
+                class="bi"
+                [class.bi-eye]="!showPassword"
+                [class.bi-eye-slash]="showPassword"
+              ></i>
+            </button>
+          </div>
+          <div *ngIf="showFieldError('password')" class="error-message">
+            <i class="bi bi-exclamation-circle"></i>
+            {{ getPasswordError() }}
+          </div>
+        </div>
+
+        <div class="password-strength">
+          <div class="strength-bar">
+            <div class="strength-fill" [class]="getPasswordStrength()"></div>
+          </div>
+          <span class="strength-text">{{ getPasswordStrengthText() }}</span>
+        </div>
+
+        <div class="password-requirements">
+          <h4>Sua senha deve conter:</h4>
+          <ul>
+            <li [class.valid]="hasMinLength()">
+              <i
+                class="bi"
+                [class.bi-check]="hasMinLength()"
+                [class.bi-circle]="!hasMinLength()"
+              ></i>
+              Pelo menos 8 caracteres
+            </li>
+            <li [class.valid]="hasUpperCase()">
+              <i
+                class="bi"
+                [class.bi-check]="hasUpperCase()"
+                [class.bi-circle]="!hasUpperCase()"
+              ></i>
+              Letra maiúscula
+            </li>
+            <li [class.valid]="hasLowerCase()">
+              <i
+                class="bi"
+                [class.bi-check]="hasLowerCase()"
+                [class.bi-circle]="!hasLowerCase()"
+              ></i>
+              Letra minúscula
+            </li>
+            <li [class.valid]="hasNumber()">
+              <i
+                class="bi"
+                [class.bi-check]="hasNumber()"
+                [class.bi-circle]="!hasNumber()"
+              ></i>
+              Número
+            </li>
+            <li [class.valid]="hasSpecialChar()">
+              <i
+                class="bi"
+                [class.bi-check]="hasSpecialChar()"
+                [class.bi-circle]="!hasSpecialChar()"
+              ></i>
+              Caractere especial
+            </li>
+          </ul>
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword" class="form-label"
+            >Confirmar Senha *</label
+          >
+          <div class="input-group">
+            <i class="bi bi-lock-fill input-icon"></i>
+            <input
+              type="password"
+              id="confirmPassword"
+              formControlName="confirmPassword"
+              class="form-input"
+              placeholder="Digite a senha novamente"
+              [class.error]="showFieldError('confirmPassword')"
+            />
+          </div>
+          <div *ngIf="showFieldError('confirmPassword')" class="error-message">
+            <i class="bi bi-exclamation-circle"></i>
+            {{ getConfirmPasswordError() }}
+          </div>
+        </div>
+
+        <div class="form-options">
+          <label class="checkbox-label">
+            <input
+              type="checkbox"
+              formControlName="agreeTerms"
+              class="checkbox-input"
+            />
+            <span class="checkmark"></span>
+            Concordo com os <a href="#" class="link">Termos de Serviço</a> e
+            <a href="#" class="link">Política de Privacidade</a>
+          </label>
+
+          <label class="checkbox-label">
+            <input
+              type="checkbox"
+              formControlName="newsletter"
+              class="checkbox-input"
+            />
+            <span class="checkmark"></span>
+            Receber novidades e oportunidades por e-mail
+          </label>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn secondary" (click)="prevStep()">
+            <i class="bi bi-arrow-left"></i>
+            Voltar
+          </button>
+          <button
+            type="submit"
+            class="btn primary"
+            [disabled]="passwordForm.invalid || isLoading"
+            [class.loading]="isLoading"
+          >
+            <span *ngIf="!isLoading">Criar conta</span>
+            <span *ngIf="isLoading" class="loading-spinner">
+              <i class="bi bi-arrow-repeat"></i>
+              Criando...
+            </span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Login Link -->
+    <div class="login-section">
+      <p>
+        Já tem uma conta?
+        <a routerLink="/login" class="login-link">Fazer login</a>
+      </p>
+    </div>
+
+    <!-- Footer -->
+    <div class="signup-footer">
+      <div class="security-badge">
+        <i class="bi bi-shield-check"></i>
+        <span>Seus dados estão seguros conosco</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div *ngIf="isLoading" class="loading-overlay">
+    <div class="loading-content">
+      <div class="spinner"></div>
+      <p>Preparando sua conta...</p>
+    </div>
+  </div>
+</div>

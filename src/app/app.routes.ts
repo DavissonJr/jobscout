@@ -9,6 +9,7 @@ import { UpgradeComponent } from '../pages/upgrade/upgrade.component';
 import { AnalyticsComponent } from '../pages/analytics/analytics.component';
 import { ProfileComponent } from '../pages/profile/profile.component';
 import { LoginComponent } from '../pages/auth/login/login.component';
+import { SignupComponent } from '../pages/auth/signup/signup.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -22,5 +23,6 @@ export const routes: Routes = [
   { path: 'analytics', component: AnalyticsComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'login', component: LoginComponent },
+  { path: 'signup', component: SignupComponent },
   { path: '**', redirectTo: '' },
 ];
