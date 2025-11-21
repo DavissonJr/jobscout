@@ -1,0 +1,458 @@
+<div class="profile-page">
+  <!-- Header -->
+  <div class="profile-header">
+    <div class="container-fluid">
+      <div class="header-content">
+        <div class="header-text">
+          <h1 class="page-title">Meu <span class="highlight">Perfil</span></h1>
+          <p class="page-subtitle">
+            Gerencie suas informações pessoais e preferências
+          </p>
+        </div>
+        <div class="header-actions">
+          <button class="action-btn secondary" (click)="downloadProfile()">
+            <i class="bi bi-download"></i>
+            Exportar Perfil
+          </button>
+          <button class="action-btn primary" (click)="saveProfile()">
+            <i class="bi bi-check-lg"></i>
+            Salvar Alterações
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="profile-main">
+    <div class="container-fluid">
+      <div class="profile-content">
+        <!-- Sidebar - Navegação -->
+        <div class="profile-sidebar">
+          <nav class="profile-nav">
+            <button
+              *ngFor="let section of navSections"
+              class="nav-item"
+              [class.active]="activeSection === section.id"
+              (click)="setActiveSection(section.id)"
+            >
+              <i class="bi" [class]="section.icon"></i>
+              <span>{{ section.label }}</span>
+            </button>
+          </nav>
+
+          <!-- Status do Perfil -->
+          <div class="profile-status">
+            <div class="status-header">
+              <h4>Status do Perfil</h4>
+              <div class="completion-badge" [class]="getCompletionClass()">
+                {{ profileCompletion }}%
+              </div>
+            </div>
+            <div class="completion-bar">
+              <div
+                class="completion-fill"
+                [style.width]="profileCompletion + '%'"
+              ></div>
+            </div>
+            <p class="status-text">Perfil {{ getCompletionText() }}</p>
+
+            <div class="completion-tips">
+              <h5>Para completar 100%:</h5>
+              <ul>
+                <li
+                  *ngFor="let tip of completionTips"
+                  [class.completed]="tip.completed"
+                >
+                  <i
+                    class="bi"
+                    [class]="tip.completed ? 'bi-check-circle' : 'bi-circle'"
+                  ></i>
+                  {{ tip.text }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Conteúdo Principal -->
+        <div class="profile-main-content">
+          <!-- Seção: Informações Pessoais -->
+          <div *ngIf="activeSection === 'personal'" class="profile-section">
+            <div class="section-header">
+              <h2>Informações Pessoais</h2>
+              <p>Atualize seus dados básicos e informações de contato</p>
+            </div>
+
+            <div class="profile-card">
+              <!-- Foto de Perfil -->
+              <div class="avatar-section">
+                <div class="avatar-upload">
+                  <div class="avatar-preview">
+                    <img
+                      [src]="userProfile.avatar"
+                      alt="Foto de perfil"
+                      class="avatar-img"
+                    />
+                    <div class="avatar-overlay">
+                      <i class="bi bi-camera"></i>
+                    </div>
+                  </div>
+                  <input
+                    type="file"
+                    #avatarInput
+                    (change)="onAvatarChange($event)"
+                    accept="image/*"
+                    hidden
+                  />
+                  <button
+                    class="avatar-change-btn"
+                    (click)="avatarInput.click()"
+                  >
+                    Alterar Foto
+                  </button>
+                </div>
+                <div class="avatar-info">
+                  <h4>{{ userProfile.fullName }}</h4>
+                  <p>{{ userProfile.title }}</p>
+                  <div class="avatar-stats">
+                    <div class="stat">
+                      <strong>{{ userProfile.views }}</strong>
+                      <span>Visualizações</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Formulário de Informações -->
+              <form class="profile-form" #profileForm="ngForm">
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label for="fullName">Nome Completo *</label>
+                    <input
+                      type="text"
+                      id="fullName"
+                      name="fullName"
+                      [(ngModel)]="userProfile.fullName"
+                      class="form-input"
+                      required
+                    />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="title">Cargo Atual *</label>
+                    <input
+                      type="text"
+                      id="title"
+                      name="title"
+                      [(ngModel)]="userProfile.title"
+                      class="form-input"
+                      required
+                    />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="email">E-mail *</label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      [(ngModel)]="userProfile.email"
+                      class="form-input"
+                      required
+                    />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="phone">Telefone</label>
+                    <input
+                      type="tel"
+                      id="phone"
+                      name="phone"
+                      [(ngModel)]="userProfile.phone"
+                      class="form-input"
+                    />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="location">Localização</label>
+                    <input
+                      type="text"
+                      id="location"
+                      name="location"
+                      [(ngModel)]="userProfile.location"
+                      class="form-input"
+                      placeholder="Cidade, Estado"
+                    />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="linkedin">LinkedIn</label>
+                    <input
+                      type="url"
+                      id="linkedin"
+                      name="linkedin"
+                      [(ngModel)]="userProfile.linkedin"
+                      class="form-input"
+                      placeholder="https://linkedin.com/in/seu-perfil"
+                    />
+                  </div>
+
+                  <div class="form-group full-width">
+                    <label for="bio">Bio Profissional</label>
+                    <textarea
+                      id="bio"
+                      name="bio"
+                      [(ngModel)]="userProfile.bio"
+                      class="form-textarea"
+                      rows="4"
+                      placeholder="Descreva sua experiência profissional, habilidades e objetivos..."
+                    ></textarea>
+                    <div class="char-count">
+                      {{ userProfile.bio!.length || 0 }}/500
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Seção: Experiência Profissional -->
+          <div *ngIf="activeSection === 'experience'" class="profile-section">
+            <div class="section-header">
+              <h2>Experiência Profissional</h2>
+              <p>Adicione sua trajetória profissional e conquistas</p>
+            </div>
+
+            <div class="profile-card">
+              <div class="section-actions">
+                <button class="add-btn" (click)="addExperience()">
+                  <i class="bi bi-plus-lg"></i>
+                  Adicionar Experiência
+                </button>
+              </div>
+
+              <div class="experiences-list">
+                <div
+                  *ngFor="let exp of userProfile.experiences; let i = index"
+                  class="experience-item"
+                >
+                  <div class="experience-header">
+                    <div class="experience-main">
+                      <h4>{{ exp.position }}</h4>
+                      <p class="company">{{ exp.company }}</p>
+                      <p class="period">
+                        {{ exp.startDate }} -
+                        {{ exp.current ? "Atual" : exp.endDate }} •
+                        {{ exp.duration }}
+                      </p>
+                    </div>
+                    <div class="experience-actions">
+                      <button class="icon-btn" (click)="editExperience(i)">
+                        <i class="bi bi-pencil"></i>
+                      </button>
+                      <button
+                        class="icon-btn danger"
+                        (click)="removeExperience(i)"
+                      >
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <p class="experience-description" *ngIf="exp.description">
+                    {{ exp.description }}
+                  </p>
+                  <div class="experience-skills" *ngIf="exp.skills.length > 0">
+                    <span *ngFor="let skill of exp.skills" class="skill-tag">{{
+                      skill
+                    }}</span>
+                  </div>
+                </div>
+
+                <div
+                  *ngIf="userProfile.experiences.length === 0"
+                  class="empty-state"
+                >
+                  <i class="bi bi-briefcase"></i>
+                  <h4>Nenhuma experiência adicionada</h4>
+                  <p>
+                    Adicione suas experiências profissionais para fortalecer seu
+                    perfil
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Seção: Habilidades -->
+          <div *ngIf="activeSection === 'skills'" class="profile-section">
+            <div class="section-header">
+              <h2>Habilidades & Competências</h2>
+              <p>
+                Destaque suas principais habilidades técnicas e comportamentais
+              </p>
+            </div>
+
+            <div class="profile-card">
+              <div class="skills-categories">
+                <!-- Habilidades Técnicas -->
+                <div class="skills-category">
+                  <h3>Habilidades Técnicas</h3>
+                  <div class="skills-grid">
+                    <div
+                      *ngFor="let skill of technicalSkills"
+                      class="skill-item"
+                    >
+                      <div class="skill-header">
+                        <span class="skill-name">{{ skill.name }}</span>
+                        <span class="skill-level">{{ skill.level }}/10</span>
+                      </div>
+                      <div class="skill-bar">
+                        <div
+                          class="skill-progress"
+                          [style.width]="skill.level * 10 + '%'"
+                        ></div>
+                      </div>
+                      <div class="skill-actions">
+                        <button
+                          class="icon-btn small"
+                          (click)="increaseSkill(skill)"
+                        >
+                          <i class="bi bi-plus"></i>
+                        </button>
+                        <button
+                          class="icon-btn small"
+                          (click)="decreaseSkill(skill)"
+                        >
+                          <i class="bi bi-dash"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <button class="add-skill-btn" (click)="addTechnicalSkill()">
+                    <i class="bi bi-plus"></i>
+                    Adicionar Habilidade
+                  </button>
+                </div>
+
+                <!-- Habilidades Comportamentais -->
+                <div class="skills-category">
+                  <h3>Habilidades Comportamentais</h3>
+                  <div class="skills-tags">
+                    <span *ngFor="let skill of softSkills" class="skill-tag">
+                      {{ skill }}
+                      <i class="bi bi-x" (click)="removeSoftSkill(skill)"></i>
+                    </span>
+                  </div>
+                  <div class="add-skill-input">
+                    <input
+                      type="text"
+                      #softSkillInput
+                      placeholder="Adicionar habilidade..."
+                      (keyup.enter)="addSoftSkill(softSkillInput)"
+                      class="form-input"
+                    />
+                    <button
+                      class="add-btn"
+                      (click)="addSoftSkill(softSkillInput)"
+                    >
+                      <i class="bi bi-plus"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Seção: Preferências -->
+          <div *ngIf="activeSection === 'preferences'" class="profile-section">
+            <div class="section-header">
+              <h2>Preferências de Vaga</h2>
+              <p>Defina o tipo de oportunidades que você busca</p>
+            </div>
+
+            <div class="profile-card">
+              <div class="preferences-grid">
+                <div class="preference-group">
+                  <label class="preference-label">Tipo de Contratação</label>
+                  <div class="preference-options">
+                    <label
+                      *ngFor="let type of employmentTypes"
+                      class="preference-option"
+                    >
+                      <input
+                        type="checkbox"
+                        [checked]="
+                          userProfile.preferences.employmentTypes.includes(type)
+                        "
+                        (change)="toggleEmploymentType(type)"
+                      />
+                      <span class="checkmark"></span>
+                      {{ type }}
+                    </label>
+                  </div>
+                </div>
+
+                <div class="preference-group">
+                  <label class="preference-label">Modalidade de Trabalho</label>
+                  <div class="preference-options">
+                    <label
+                      *ngFor="let mode of workModes"
+                      class="preference-option"
+                    >
+                      <input
+                        type="checkbox"
+                        [checked]="
+                          userProfile.preferences.workModes.includes(mode)
+                        "
+                        (change)="toggleWorkMode(mode)"
+                      />
+                      <span class="checkmark"></span>
+                      {{ mode }}
+                    </label>
+                  </div>
+                </div>
+
+                <div class="preference-group">
+                  <label class="preference-label"
+                    >Faixa Salarial Desejada (R$)</label
+                  >
+                  <select
+                    class="form-input"
+                    [(ngModel)]="userProfile.preferences.salaryRange"
+                  >
+                    <option value="">Selecionar faixa</option>
+                    <option value="0-3000">Até R$ 3.000</option>
+                    <option value="3000-6000">R$ 3.000 - R$ 6.000</option>
+                    <option value="6000-10000">R$ 6.000 - R$ 10.000</option>
+                    <option value="10000-15000">R$ 10.000 - R$ 15.000</option>
+                    <option value="15000+">Acima de R$ 15.000</option>
+                  </select>
+                </div>
+
+                <div class="preference-group full-width">
+                  <label class="preference-label">Nível de Senioridade</label>
+                  <div class="seniority-levels">
+                    <label
+                      *ngFor="let level of seniorityLevels"
+                      class="seniority-option"
+                    >
+                      <input
+                        type="radio"
+                        name="seniority"
+                        [checked]="userProfile.preferences.seniority === level"
+                        (change)="userProfile.preferences.seniority = level"
+                      />
+                      <span class="radio-checkmark"></span>
+                      {{ level }}
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
